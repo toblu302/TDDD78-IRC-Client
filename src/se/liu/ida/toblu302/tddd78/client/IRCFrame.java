@@ -1,8 +1,10 @@
 package se.liu.ida.toblu302.tddd78.client;
 
+import se.liu.ida.toblu302.tddd78.library.ComplexEvent;
 import se.liu.ida.toblu302.tddd78.library.IRCEvent;
 import se.liu.ida.toblu302.tddd78.library.IRCListener;
 import se.liu.ida.toblu302.tddd78.library.IRCConnection;
+import se.liu.ida.toblu302.tddd78.library.SimpleEvent;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -81,24 +83,24 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         this.irc.selectChannel(channelName);
     }
 
-    public void onIRCEvent(IRCEvent e, String argument)
+    public void onIRCEvent(IRCEvent e)
     {
-        switch(e)
+        switch( e.getEventType() )
         {
             case NEWMESSAGE:
                 updateChatLog();
-                break;
-
-            case JOINEDCHANNEL:
-                channelSelect.newChannel(argument);
                 break;
 
             case CHANGEDCHANNEL:
                 updateChatLog();
                 break;
 
+            case JOINEDCHANNEL:
+                channelSelect.newChannel( e.getArgument() );
+                break;
+
             case LEFTCHANNEL:
-                channelSelect.removeChannel(argument);
+                channelSelect.removeChannel( e.getArgument() );
                 break;
 
             default:

@@ -1,6 +1,5 @@
 package se.liu.ida.toblu302.tddd78.library;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -43,7 +42,7 @@ public class IRCConnection
 	t.join();
 	talkables.add(t);
 
-	notifyListeners(IRCEvent.JOINEDCHANNEL, name);
+	notifyListeners(new ChannelEvent(IRCEventType.JOINEDCHANNEL, name));
     }
 
     public void leaveChannel(String name)
@@ -52,7 +51,7 @@ public class IRCConnection
 	t.leave();
 	talkables.remove(t);
 
-	notifyListeners(IRCEvent.LEFTCHANNEL, name);
+	notifyListeners(new ChannelEvent(IRCEventType.LEFTCHANNEL, name));
     }
 
     public void selectChannel(String channelName)
@@ -69,14 +68,15 @@ public class IRCConnection
 	if( t != null)
 	{
 	    this.selectedTalkable = t;
-	    this.notifyListeners(IRCEvent.CHANGEDCHANNEL);
+
+	    notifyListeners( new SimpleEvent(SimpleEventType.CHANGEDCHANNEL) );
 	}
     }
 
     public void selectRoot()
     {
 	selectedTalkable = null;
-	this.notifyListeners(IRCEvent.CHANGEDCHANNEL);
+	notifyListeners(new IRCEvent(IRCEventType.CHANGEDCHANNEL));
     }
 
     public void talk(String msg)
@@ -86,7 +86,7 @@ public class IRCConnection
 	    this.selectedTalkable.talk(msg);
 	    selectedTalkable.addLog(this.userName, msg);
 
-	    notifyListeners(IRCEvent.NEWMESSAGE);
+	    notifyListeners(new IRCEvent(IRCEventType.NEWMESSAGE));
 	}
     }
 
@@ -128,8 +128,7 @@ public class IRCConnection
 
 	    default: break;
 	}
-
-	notifyListeners(IRCEvent.NEWMESSAGE);
+	notifyListeners(new IRCEvent(IRCEventType.NEWMESSAGE));
     }
 
     private Talkable getChannelFromName(String channelName)
@@ -177,19 +176,11 @@ public class IRCConnection
 	this.listeners.add(ircl);
     }
 
-    private void notifyListeners(IRCEvent e, String argument)
-    {
-	for (IRCListener listener : listeners)
-	{
-	    listener.onIRCEvent(e, argument);
-	}
-    }
-
     private void notifyListeners(IRCEvent e)
     {
     	for (IRCListener listener : listeners)
     	{
-    	    listener.onIRCEvent(e, null);
+    	    listener.onIRCEvent(e);
     	}
     }
 }
