@@ -68,6 +68,8 @@ public class Connection
     {
 	try
 	{
+	    socket.shutdownInput();
+	    socket.shutdownOutput();
 	    writer.close();
 	    reader.close();
 	    socket.close();

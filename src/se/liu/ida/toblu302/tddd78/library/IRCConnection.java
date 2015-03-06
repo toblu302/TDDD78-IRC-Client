@@ -1,5 +1,6 @@
 package se.liu.ida.toblu302.tddd78.library;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -13,13 +14,14 @@ public class IRCConnection
     private String userName;
     private String realName;
 
+
     private Collection<IRCListener> listeners = new ArrayList<>();
     private IRCLog log = new IRCLog();
 
     private Talkable selectedTalkable = null;
     private Collection<Talkable> talkables = new ArrayList<>();
 
-    private volatile boolean quit = false;
+    private Thread loggingThread = null;
 
     public IRCConnection(final String server, int port, String userName, String realName)
     {
@@ -92,9 +94,9 @@ public class IRCConnection
 
     public void quitConnection()
     {
-	quit = true;
+	loggingThread.interrupt();
 	connection.write("QUIT");
-	connection.close();
+    	connection.close();
     }
 
     private void handleMessage(String message)
@@ -148,15 +150,19 @@ public class IRCConnection
 	{
 	    public void run()
 	    {
-		//TODO: make this threadsafe (make the "quit" work at all)
-		while(!quit)
+		while (!Thread.interrupted())
 		{
 		    String line = read();
-		    handleMessage(line);
+
+		    if(line != null)
+		    {
+			handleMessage(line);
+		    }
 		}
 	    }
 	}
-	new Thread(new IRCThread()).start();
+	loggingThread = new Thread(new IRCThread());
+	loggingThread.start();
     }
 
     public void addListener(IRCListener ircl)
