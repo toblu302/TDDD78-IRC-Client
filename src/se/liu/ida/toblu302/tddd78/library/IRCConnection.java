@@ -10,18 +10,19 @@ import java.util.Collection;
 
 public class IRCConnection
 {
+    private Collection<IRCListener> listeners = new ArrayList<>();
+
     private Connection connection;
     private String userName;
     private String realName;
 
-
-    private Collection<IRCListener> listeners = new ArrayList<>();
-    private IRCLog log = new IRCLog();
-
-    private Talkable selectedTalkable = null;
     private Collection<Talkable> talkables = new ArrayList<>();
+    private Talkable selectedTalkable = null;
 
     private Thread loggingThread = null;
+
+    private IRCLog log = new IRCLog();
+
 
     public IRCConnection(final String server, int port, String userName, String realName)
     {

@@ -46,8 +46,16 @@ public class ChannelSelectComponent extends JPanel
 	    if(root.getChildAt(i).toString().equals(str))
 	    {
 		root.remove(i);
+		break;
 	    }
 	}
+	model.reload(root);
+    }
+
+    public void removeAll()
+    {
+	DefaultTreeModel model = (DefaultTreeModel)channelSelector.getModel();
+	root.removeAllChildren();
 	model.reload(root);
     }
 

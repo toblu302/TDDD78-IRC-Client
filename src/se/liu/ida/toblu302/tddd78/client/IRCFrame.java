@@ -108,7 +108,14 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
     private void joinServer()
     {
-        //TODO: disconnect from the current server and join a new one
+        String serverAdress = JOptionPane.showInputDialog(null, "Join server (port 6667):");
+        if (serverAdress != null)
+        {
+            channelSelect.removeAll();
+            irc.quitConnection();
+            irc = new IRCConnection(serverAdress, 6667, "tobleu", "Sodjwe  Dofigijrt");
+            irc.addListener(this);
+        }
     }
 
     //InputListener - user entered some input
