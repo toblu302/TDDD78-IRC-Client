@@ -10,12 +10,14 @@ public class ChannelSelectComponent extends JPanel
     private JTree channelSelector = null;
     private DefaultMutableTreeNode root = null;
 
+    private final String rootTitle = "IRC";
+
     public ChannelSelectComponent(TreeSelectionListener selectionListener)
     {
 	Dimension dimension = new Dimension(100,640);
 	this.setPreferredSize(dimension);
 
-	root = new DefaultMutableTreeNode("IRC");
+	root = new DefaultMutableTreeNode(rootTitle);
 
 	channelSelector = new JTree(root);
 
@@ -29,6 +31,16 @@ public class ChannelSelectComponent extends JPanel
     public DefaultMutableTreeNode selectedNode()
     {
 	return (DefaultMutableTreeNode)channelSelector.getLastSelectedPathComponent();
+    }
+
+    public boolean isRootSelected()
+    {
+	DefaultMutableTreeNode firstLeaf = ((DefaultMutableTreeNode)channelSelector.getModel().getRoot());
+	if(this.selectedNode() != null)
+	{
+	    return this.selectedNode().equals(firstLeaf);
+	}
+	return false;
     }
 
     public void newChannel(String str)

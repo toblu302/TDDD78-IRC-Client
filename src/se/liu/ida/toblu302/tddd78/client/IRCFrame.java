@@ -131,6 +131,11 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
     public void valueChanged(TreeSelectionEvent e)
     {
+        if(channelSelect.isRootSelected())
+        {
+            irc.selectRoot();
+        }
+
         DefaultMutableTreeNode channel = channelSelect.selectedNode();
 
         if(channel != null)

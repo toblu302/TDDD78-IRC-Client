@@ -73,6 +73,12 @@ public class IRCConnection
 	}
     }
 
+    public void selectRoot()
+    {
+	selectedTalkable = null;
+	this.notifyListeners(IRCEvent.CHANGEDCHANNEL);
+    }
+
     public void talk(String msg)
     {
 	if( this.selectedTalkable != null )
