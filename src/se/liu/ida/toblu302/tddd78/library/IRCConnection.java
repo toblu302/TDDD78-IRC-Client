@@ -36,6 +36,11 @@ public class IRCConnection
 	startLogging();
     }
 
+    public void changeNick(String newNick)
+    {
+	connection.write("NICK " + newNick + "\r\n");
+    }
+
     public void joinChannel(String channelName)
     {
 	Talkable t = new Talkable(channelName, this.connection);

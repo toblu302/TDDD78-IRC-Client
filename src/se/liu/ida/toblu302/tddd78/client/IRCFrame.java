@@ -14,6 +14,8 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 {
     private IRCConnection irc;
 
+    private CommandExecuter command;
+
     private InputComponent textInput = new InputComponent();
     private ChatLogComponent chatLog = new ChatLogComponent();
     private ChannelSelectComponent channelSelect = new ChannelSelectComponent(this);
@@ -33,6 +35,8 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         irc.addListener(this);
 	irc.joinChannel("#sdfff");
 	irc.selectChannel("#sdfff");
+
+        command = new CommandExecuter(irc);
 
 	this.pack();
 	this.setVisible(true);
@@ -113,7 +117,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         String serverAdress = JOptionPane.showInputDialog(null, "Join server (port 6667):");
         if (serverAdress != null)
         {
-            channelSelect.removeAll();
+            channelSelect.removeAllChannels();
             irc.quitConnection();
             irc = new IRCConnection(serverAdress, 6667, "tobleu", "Sodjwe  Dofigijrt");
             irc.addListener(this);
@@ -123,7 +127,14 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     //InputListener - user entered some input
     public void recievedInput(String str)
     {
-	irc.talk(str);
+        if(str.startsWith("/"))
+        {
+            command.doCommand(str);
+        }
+        else
+        {
+            irc.talk(str);
+        }
     }
 
     public void updateChatLog()
