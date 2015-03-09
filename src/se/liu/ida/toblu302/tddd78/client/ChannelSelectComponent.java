@@ -10,14 +10,12 @@ public class ChannelSelectComponent extends JPanel
     private JTree channelSelector = null;
     private DefaultMutableTreeNode root = null;
 
-    private final String rootTitle = "IRC";
-
     public ChannelSelectComponent(TreeSelectionListener selectionListener)
     {
 	Dimension dimension = new Dimension(100,640);
 	this.setPreferredSize(dimension);
 
-	root = new DefaultMutableTreeNode(rootTitle);
+	root = new DefaultMutableTreeNode("IRC");
 
 	channelSelector = new JTree(root);
 
@@ -35,7 +33,6 @@ public class ChannelSelectComponent extends JPanel
 
     private boolean channelExists(String channel)
     {
-	DefaultTreeModel model = (DefaultTreeModel)channelSelector.getModel();
 	for(int i = 0; i < root.getChildCount(); ++i)
 	{
 	    if(root.getChildAt(i).toString().equals(channel))
