@@ -1,19 +1,29 @@
 package se.liu.ida.toblu302.tddd78.library;
 
-public abstract class IRCEvent
+public class IRCEvent
 {
-    private SimpleEventType simpleEventType = null;
-    private ComplexEventType complexEventType = null;
+    private IRCEventType eventType;
+    private String argument;
 
-    public IRCEvent(final SimpleEventType simpleEventType)
+    public IRCEvent(final IRCEventType eventType)
     {
-	this.simpleEventType = simpleEventType;
+        this.eventType = eventType;
+        this.argument = null;
     }
 
-    public IRCEvent(final ComplexEventType complexEventType)
+    public IRCEvent(final IRCEventType eventType, final String argument)
     {
-	this.complexEventType = complexEventType;
+        this.eventType = eventType;
+        this.argument = argument;
     }
 
+    public IRCEventType getEventType()
+    {
+        return eventType;
+    }
 
+    public String getArgument()
+    {
+        return argument;
+    }
 }

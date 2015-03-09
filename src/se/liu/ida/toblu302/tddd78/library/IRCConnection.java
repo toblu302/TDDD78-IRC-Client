@@ -42,7 +42,7 @@ public class IRCConnection
 	t.join();
 	talkables.add(t);
 
-	notifyListeners(new ChannelEvent(IRCEventType.JOINEDCHANNEL, name));
+	notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, name));
     }
 
     public void leaveChannel(String name)
@@ -51,7 +51,7 @@ public class IRCConnection
 	t.leave();
 	talkables.remove(t);
 
-	notifyListeners(new ChannelEvent(IRCEventType.LEFTCHANNEL, name));
+	notifyListeners(new IRCEvent(IRCEventType.LEFTCHANNEL, name));
     }
 
     public void selectChannel(String channelName)
@@ -69,7 +69,7 @@ public class IRCConnection
 	{
 	    this.selectedTalkable = t;
 
-	    notifyListeners( new SimpleEvent(SimpleEventType.CHANGEDCHANNEL) );
+	    notifyListeners( new IRCEvent(IRCEventType.CHANGEDCHANNEL) );
 	}
     }
 

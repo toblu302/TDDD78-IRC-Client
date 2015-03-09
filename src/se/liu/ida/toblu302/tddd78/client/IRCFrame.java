@@ -1,10 +1,8 @@
 package se.liu.ida.toblu302.tddd78.client;
 
-import se.liu.ida.toblu302.tddd78.library.ComplexEvent;
 import se.liu.ida.toblu302.tddd78.library.IRCEvent;
 import se.liu.ida.toblu302.tddd78.library.IRCListener;
 import se.liu.ida.toblu302.tddd78.library.IRCConnection;
-import se.liu.ida.toblu302.tddd78.library.SimpleEvent;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
