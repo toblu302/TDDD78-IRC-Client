@@ -33,6 +33,20 @@ public class ChannelSelectComponent extends JPanel
 	return (DefaultMutableTreeNode)channelSelector.getLastSelectedPathComponent();
     }
 
+    private boolean channelExists(String channel)
+    {
+	DefaultTreeModel model = (DefaultTreeModel)channelSelector.getModel();
+	for(int i = 0; i < root.getChildCount(); ++i)
+	{
+	    if(root.getChildAt(i).toString().equals(channel))
+	    {
+		return true;
+	    }
+	}
+
+	return false;
+    }
+
     public boolean isRootSelected()
     {
 	DefaultMutableTreeNode firstLeaf = ((DefaultMutableTreeNode)channelSelector.getModel().getRoot());
@@ -45,9 +59,12 @@ public class ChannelSelectComponent extends JPanel
 
     public void newChannel(String str)
     {
-	root.add(new DefaultMutableTreeNode(str));
-	DefaultTreeModel model = (DefaultTreeModel)channelSelector.getModel();
-	model.reload(root);
+	if(!channelExists(str))
+	{
+	    root.add(new DefaultMutableTreeNode(str));
+	    DefaultTreeModel model = (DefaultTreeModel) channelSelector.getModel();
+	    model.reload(root);
+	}
     }
 
     public void removeChannel(String str)
@@ -64,7 +81,7 @@ public class ChannelSelectComponent extends JPanel
 	model.reload(root);
     }
 
-    public void removeAll()
+    public void removeAllChannels()
     {
 	DefaultTreeModel model = (DefaultTreeModel)channelSelector.getModel();
 	root.removeAllChildren();

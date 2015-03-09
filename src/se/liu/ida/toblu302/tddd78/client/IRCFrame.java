@@ -86,9 +86,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         switch( e.getEventType() )
         {
             case NEWMESSAGE:
-                updateChatLog();
-                break;
-
+            case NEWQUERYMESSAGE:
             case CHANGEDCHANNEL:
                 updateChatLog();
                 break;
@@ -99,6 +97,10 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
             case LEFTCHANNEL:
                 channelSelect.removeChannel( e.getArgument() );
+                break;
+
+            case NEWQUERY:
+                channelSelect.newChannel( e.getArgument() );
                 break;
 
             default:

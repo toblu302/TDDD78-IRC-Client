@@ -19,9 +19,10 @@ public final class Message
 
     public static String getMessageString(String msg)
     {
-	int channelStart = msg.indexOf('#');
-	int start = msg.indexOf(':', channelStart) + 1;
-	return msg.substring(start, msg.length());
+	int privMsgStart = msg.indexOf("PRIVMSG ");
+	int start = msg.indexOf(" ", privMsgStart)+1;
+	start = msg.indexOf(" ", start)+1;
+	return msg.substring(start+1, msg.length());
     }
 
     public static MessageType getMessageType(String message)
@@ -29,6 +30,11 @@ public final class Message
 	if( message.contains("PRIVMSG #") )
 	{
 	    return MessageType.CHANNEL;
+	}
+
+	else if( message.contains("PRIVMSG ") )
+	{
+	    return MessageType.PRIVATE;
 	}
 
 	else if( message.substring(0, 10).equals("PING :irc.") )

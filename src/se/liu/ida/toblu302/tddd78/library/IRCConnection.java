@@ -36,18 +36,32 @@ public class IRCConnection
 	startLogging();
     }
 
-    public void joinChannel(String name)
+    public void joinChannel(String channelName)
     {
-	Talkable t = new Talkable(name, this.connection);
+	Talkable t = new Talkable(channelName, this.connection);
 	t.join();
 	talkables.add(t);
 
-	notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, name));
+	notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, channelName));
+    }
+
+    private boolean inQuery(String userName)
+    {
+	Talkable t = getTalkableFromName(userName);
+	return( t != null);
+    }
+
+    public void joinQuery(String userName)
+    {
+	Talkable t = new Talkable(userName, this.connection);
+	talkables.add(t);
+
+	notifyListeners(new IRCEvent(IRCEventType.NEWQUERY, userName));
     }
 
     public void leaveChannel(String name)
     {
-	Talkable t = this.getChannelFromName(name);
+	Talkable t = this.getTalkableFromName(name);
 	t.leave();
 	talkables.remove(t);
 
@@ -109,14 +123,30 @@ public class IRCConnection
     private void handleMessage(String message)
     {
 	log.add(message);
+
+	String channelName, userName, messageString;
+	Talkable t;
+
 	switch(Message.getMessageType(message))
 	{
 	    case CHANNEL:
-		String channelName = Message.getChannelString(message);
-		String userName = Message.getUserString(message);
-		String messageString = Message.getMessageString(message);
-		Talkable t = getChannelFromName(channelName);
+		channelName = Message.getChannelString(message);
+		userName = Message.getUserString(message);
+		messageString = Message.getMessageString(message);
+		t = getTalkableFromName(channelName);
 		t.addLog(userName, messageString);
+		break;
+
+	    case PRIVATE:
+		userName = Message.getUserString(message);
+		messageString = Message.getMessageString(message);
+		if(!inQuery(userName))
+		{
+		    joinQuery(userName);
+		}
+		t = getTalkableFromName(userName);
+		t.addLog(userName, messageString);
+		notifyListeners(new IRCEvent(IRCEventType.NEWQUERYMESSAGE));
 		break;
 
 	    case PING:
@@ -131,7 +161,7 @@ public class IRCConnection
 	notifyListeners(new IRCEvent(IRCEventType.NEWMESSAGE));
     }
 
-    private Talkable getChannelFromName(String channelName)
+    private Talkable getTalkableFromName(String channelName)
     {
 	Talkable t = null;
 	for (Talkable talkable : talkables)
