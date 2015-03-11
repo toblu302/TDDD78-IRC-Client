@@ -14,7 +14,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 {
     private IRCConnection irc;
 
-    private CommandExecuter command;
+    private CommandExecuter commandHandler;
 
     private InputComponent textInput = new InputComponent();
     private ChatLogComponent chatLog = new ChatLogComponent();
@@ -36,7 +36,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 	irc.joinChannel("#sdfff");
 	irc.selectChannel("#sdfff");
 
-        command = new CommandExecuter(irc);
+        commandHandler = new CommandExecuter(irc);
 
 	this.pack();
 	this.setVisible(true);
@@ -129,7 +129,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     {
         if(str.startsWith("/"))
         {
-            command.doCommand(str);
+            commandHandler.executeCommand(str);
         }
         else
         {

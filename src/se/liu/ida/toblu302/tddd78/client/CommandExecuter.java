@@ -5,36 +5,51 @@ import se.liu.ida.toblu302.tddd78.library.IRCConnection;
 public class CommandExecuter
 {
     private IRCConnection irc;
+    private CommandMaker maker = new CommandMaker();
 
     public CommandExecuter(final IRCConnection irc)
     {
 	this.irc = irc;
     }
 
-    private void executeCommand(String command)
-    {
-	if( command.equals("quit") )
-	{
-	    irc.quitConnection();
-	}
-    }
-
-    private void executeCommand(String command, String arg1)
-    {
-	if( command.equals("nick") )
-	{
-	    irc.changeNick(arg1);
-	}
-    }
-
-    public void doCommand(String command)
+    public void executeCommand(String command)
     {
 	if(!command.startsWith("/"))
 	{
 	    return;
 	}
 
-	executeCommand(command.substring(1, command.length()));
-    }
+	String[] parts = command.substring(1).split(" ");
 
+	Command c = maker.getCommand(parts);
+
+	if(c == null)
+	{
+	    return;
+	}
+
+	switch(c.getType())
+	{
+	    case QUIT:
+		irc.quitConnection();
+		System.exit(0);
+		break;
+
+	    case NICK:
+		irc.changeNick( parts[1] );
+		break;
+
+	    case CHANNEL:
+		irc.joinChannel( parts[1] );
+		break;
+
+	    case PM:
+		irc.joinQuery( parts[1] );
+		break;
+
+	    default:
+		break;
+	}
+
+    }
 }
