@@ -8,26 +8,25 @@ public class ChatLogComponent extends JPanel
     private JTextArea textArea = new JTextArea();
     private JScrollPane scrollPane;
 
-    private final static int WIDTH = 640;
-    private final static int HEIGHT = 720;
-
-
     public ChatLogComponent()
     {
-	Dimension dimension = new Dimension(WIDTH+10, HEIGHT+10);
-	this.setPreferredSize(dimension);
+	GridBagConstraints c = new GridBagConstraints();
+	c.fill = GridBagConstraints.BOTH;
+	c.gridx = 0;
+	c.gridy = 0;
+	c.weightx = 0.5;
+	c.weighty = 0.5;
 
+	this.setLayout(new GridBagLayout());
 	textArea.setLineWrap(true);
 	textArea.setEditable(false);
 	textArea.setVisible(true);
 
 	scrollPane = new JScrollPane(textArea);
 
-	Dimension scrollDimension = new Dimension(WIDTH+10, HEIGHT+10);
-	scrollPane.setPreferredSize(scrollDimension);
 	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-	this.add(scrollPane);
+	this.add(scrollPane, c);
     }
 
     public void setText(String str)

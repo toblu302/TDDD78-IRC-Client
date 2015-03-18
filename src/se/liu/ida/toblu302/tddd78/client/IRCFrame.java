@@ -5,10 +5,10 @@ import se.liu.ida.toblu302.tddd78.library.IRCListener;
 import se.liu.ida.toblu302.tddd78.library.IRCConnection;
 
 import javax.swing.*;
+import java.awt.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.awt.*;
 
 public class IRCFrame extends JFrame implements IRCListener, InputListener, TreeSelectionListener
 {
@@ -20,16 +20,46 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private ChatLogComponent chatLog = new ChatLogComponent();
     private ChannelSelectComponent channelSelect = new ChannelSelectComponent(this);
 
+    private final int WIDTH = 640;
+    private final int HEIGHT = 480;
+
     public IRCFrame() throws HeadlessException
     {
 	super("IRC!");
 
         this.setJMenuBar(this.getIRCMenuBar());
-
 	textInput.addListener(this);
-	this.add(textInput, BorderLayout.SOUTH);
-        this.add(chatLog, BorderLayout.CENTER);
-        this.add(channelSelect, BorderLayout.WEST);
+
+        this.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        channelSelect.setPreferredSize( new Dimension( (int)(WIDTH * (2/10)), HEIGHT-20) );
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0.2;
+        c.weighty = 0.5;
+        c.gridwidth = 1;
+        this.add(channelSelect, c);
+
+        chatLog.setPreferredSize( new Dimension( (int)(WIDTH * (8/10)), HEIGHT-20) );
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 0.9;
+        c.weighty = 0.5;
+        c.gridwidth = 13;
+        this.add(chatLog, c);
+
+        textInput.setPreferredSize(new Dimension(WIDTH, 20));
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 0.5;
+        c.weighty = 0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        this.add(textInput, c);
+
 
 	irc = new IRCConnection("irc.rizon.net", 6667, "tobleu", "Sodjwe  Dofigijrt");
         irc.addListener(this);
@@ -38,6 +68,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
         commandHandler = new CommandExecuter(irc);
 
+        this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
 	this.pack();
 	this.setVisible(true);
     }

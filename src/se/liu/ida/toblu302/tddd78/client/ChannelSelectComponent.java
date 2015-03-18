@@ -12,8 +12,14 @@ public class ChannelSelectComponent extends JPanel
 
     public ChannelSelectComponent(TreeSelectionListener selectionListener)
     {
-	Dimension dimension = new Dimension(100,640);
-	this.setPreferredSize(dimension);
+	GridBagConstraints c = new GridBagConstraints();
+	c.fill = GridBagConstraints.BOTH;
+	c.gridx = 0;
+	c.gridy = 0;
+	c.weightx = 0.5;
+	c.weighty = 0.5;
+
+	this.setLayout(new GridBagLayout());
 
 	root = new DefaultMutableTreeNode("IRC");
 
@@ -23,7 +29,7 @@ public class ChannelSelectComponent extends JPanel
 	channelSelector.addTreeSelectionListener(selectionListener);
 
 
-	this.add(channelSelector);
+	this.add(channelSelector, c);
     }
 
     public DefaultMutableTreeNode selectedNode()
