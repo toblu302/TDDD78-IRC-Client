@@ -37,7 +37,7 @@ public final class Message
 	    return MessageType.PRIVATE;
 	}
 
-	else if( message.substring(0, 10).equals("PING :irc.") )
+    else if( message.startsWith("PING :irc.") )
 	{
 	    return MessageType.PING;
 	}
