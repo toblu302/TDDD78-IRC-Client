@@ -16,12 +16,13 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
     private CommandExecuter commandHandler;
 
-    private InputComponent textInput = new InputComponent();
-    private ChatLogComponent chatLog = new ChatLogComponent();
     private ChannelSelectComponent channelSelect = new ChannelSelectComponent(this);
+    private ChatLogComponent chatLog = new ChatLogComponent();
+    private ConnectedUsersComponent connectedUsers = new ConnectedUsersComponent();
+    private InputComponent textInput = new InputComponent();
 
-    private final int WIDTH = 640;
-    private final int HEIGHT = 480;
+    private final int WIDTH = 720;
+    private final int HEIGHT = 640;
 
     public IRCFrame() throws HeadlessException
     {
@@ -46,10 +47,19 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 0;
-        c.weightx = 0.9;
+        c.weightx = 0.8;
         c.weighty = 0.5;
-        c.gridwidth = 13;
+        c.gridwidth = 1;
         this.add(chatLog, c);
+
+        connectedUsers.setPreferredSize( new Dimension( (int)(WIDTH * (2/10)), HEIGHT-20) );
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 2;
+        c.gridy = 0;
+        c.weightx = 0.2;
+        c.weighty = 0.5;
+        c.gridwidth = 1;
+        this.add(connectedUsers, c);
 
         textInput.setPreferredSize(new Dimension(WIDTH, 20));
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -120,9 +130,10 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     {
         switch( e.getEventType() )
         {
+            case CHANGEDCHANNEL:
+                //
             case NEWMESSAGE:
             case NEWQUERYMESSAGE:
-            case CHANGEDCHANNEL:
                 updateChatLog();
                 break;
 
