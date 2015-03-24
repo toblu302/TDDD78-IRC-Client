@@ -25,6 +25,19 @@ public final class Message
 	return msg.substring(start+1, msg.length());
     }
 
+    public static int getNumericCode(String msg)
+    {
+	int returnNumber = -1;
+
+	String[] parts = msg.split(" ");
+	if(parts.length > 1 && parts[1].length()==3)
+	{
+	    returnNumber = Integer.parseInt(parts[1]);
+	}
+
+	return returnNumber;
+    }
+
     public static MessageType getMessageType(String message)
     {
 	if( message.contains("PRIVMSG #") )
@@ -37,9 +50,23 @@ public final class Message
 	    return MessageType.PRIVATE;
 	}
 
-    else if( message.startsWith("PING :irc."))
+    	else if( message.startsWith("PING :irc."))
 	{
 	    return MessageType.PING;
+	}
+
+	else
+	{
+	    String[] parts = message.split(" ");
+	    if(parts.length > 1 && parts[1].length()==3)
+	    {
+		if(Character.isDigit(parts[1].charAt(0))
+		   && Character.isDigit(parts[1].charAt(1))
+		   && Character.isDigit(parts[1].charAt(2)))
+		{
+		    return MessageType.NUMERIC;
+		}
+	    }
 	}
 
 	return MessageType.OTHER;

@@ -2,6 +2,7 @@ package se.liu.ida.toblu302.tddd78.client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ConnectedUsersComponent extends JPanel
 {
@@ -34,7 +35,7 @@ public class ConnectedUsersComponent extends JPanel
 	removeAllUsers();
     }
 
-    public void addMultipleUsers(String[] names)
+    public void addMultipleUsers(ArrayList<String> names)
     {
 	for (String name : names)
 	{
@@ -49,7 +50,10 @@ public class ConnectedUsersComponent extends JPanel
 
     public void addUser(String name)
     {
-	listModel.addElement(name);
+	if(listModel.indexOf(name) == -1)
+	{
+	    listModel.addElement(name);
+	}
     }
 
     public void removeUser(String name)

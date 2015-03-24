@@ -118,6 +118,15 @@ public class IRCConnection
 	return log.toString();
     }
 
+    public ArrayList<String> getChannelUsers()
+    {
+	if(selectedTalkable == null)
+	{
+	    return null;
+	}
+	return selectedTalkable.getCurrentUsers();
+    }
+
     public void quitConnection()
     {
 	loggingThread.interrupt();
@@ -158,12 +167,50 @@ public class IRCConnection
 		connection.write("PONG");
 		break;
 
+	    case NUMERIC:
+		handleNumeric(Message.getNumericCode(message), message);
+		System.out.println(Message.getNumericCode(message));
+		break;
+
 	    case OTHER:
 		break;
 
 	    default: break;
 	}
 	notifyListeners(new IRCEvent(IRCEventType.NEWMESSAGE));
+    }
+
+    private void handleNumeric(int numericCode, String message)
+    {
+	switch( NumericReply.getNumericReply(numericCode) )
+	{
+	    case RPL_NOTOPIC:
+		//channel doesn't have a topic
+		break;
+
+	    case RPL_TOPIC:
+		//channel got a topic
+		break;
+
+	    case RPL_NAMREPLY:
+		String channelName = Message.getChannelString(message);
+		Talkable t = this.getTalkableFromName(channelName);
+
+		int start = message.indexOf(channelName);
+		String[] parts = message.substring(start+channelName.length()+2).split(" ");
+		for (String name : parts)
+		{
+		    t.addUser(name);
+		}
+		break;
+
+	    case RPL_ENDOFNAMES:
+		//
+		break;
+
+	    default:
+		break;
+	}
     }
 
     private Talkable getTalkableFromName(String channelName)
