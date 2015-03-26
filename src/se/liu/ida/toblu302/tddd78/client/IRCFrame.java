@@ -21,8 +21,14 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private ConnectedUsersComponent connectedUsers = new ConnectedUsersComponent();
     private InputComponent textInput = new InputComponent();
 
-    private final int WIDTH = 720;
-    private final int HEIGHT = 640;
+    private final static int WIDTH = 720;
+    private final static int HEIGHT = 640;
+
+    private final static int CHATBOX_HEIGHT = 20;
+
+    private final static double CHANNEL_LIST_WEIGHT = 0.2;
+    private final static double USER_LIST_WEIGHT = 0.2;
+    private final static double CHATLOG_WEIGHT = 0.8;
 
     public IRCFrame() throws HeadlessException
     {
@@ -34,38 +40,38 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-        channelSelect.setPreferredSize( new Dimension( (int)(WIDTH * (2/10)), HEIGHT-20) );
+        channelSelect.setPreferredSize( new Dimension( (int)(WIDTH * CHANNEL_LIST_WEIGHT), HEIGHT) );
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
-        c.weightx = 0.2;
-        c.weighty = 0.5;
+        c.weightx = CHANNEL_LIST_WEIGHT;
+        c.weighty = 5;
         c.gridwidth = 1;
         this.add(channelSelect, c);
 
-        chatLog.setPreferredSize( new Dimension( (int)(WIDTH * (8/10)), HEIGHT-20) );
+        chatLog.setPreferredSize( new Dimension( (int)(WIDTH * CHATLOG_WEIGHT), HEIGHT) );
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 0;
-        c.weightx = 0.8;
-        c.weighty = 0.5;
+        c.weightx = CHATLOG_WEIGHT;
+        c.weighty = 5;
         c.gridwidth = 1;
         this.add(chatLog, c);
 
-        connectedUsers.setPreferredSize( new Dimension( (int)(WIDTH * (2/10)), HEIGHT-20) );
+        connectedUsers.setPreferredSize( new Dimension( (int)(WIDTH * USER_LIST_WEIGHT), HEIGHT) );
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 2;
         c.gridy = 0;
-        c.weightx = 0.2;
-        c.weighty = 0.5;
+        c.weightx = USER_LIST_WEIGHT;
+        c.weighty = 5;
         c.gridwidth = 1;
         this.add(connectedUsers, c);
 
-        textInput.setPreferredSize(new Dimension(WIDTH, 20));
+        textInput.setPreferredSize(new Dimension(WIDTH, CHATBOX_HEIGHT));
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 1;
-        c.weightx = 0.5;
+        c.weightx = 5;
         c.weighty = 0;
         c.gridwidth = GridBagConstraints.REMAINDER;
         this.add(textInput, c);

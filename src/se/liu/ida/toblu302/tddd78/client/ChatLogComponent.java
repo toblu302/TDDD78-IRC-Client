@@ -14,8 +14,8 @@ public class ChatLogComponent extends JPanel
 	c.fill = GridBagConstraints.BOTH;
 	c.gridx = 0;
 	c.gridy = 0;
-	c.weightx = 0.5;
-	c.weighty = 0.5;
+	c.weightx = 1;
+	c.weighty = 1;
 
 	this.setLayout(new GridBagLayout());
 	textArea.setLineWrap(true);

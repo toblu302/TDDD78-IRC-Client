@@ -43,7 +43,7 @@ public class CommandExecuter
 		irc.joinChannel( parts[1] );
 		break;
 
-	    case PM:
+	    case MSG:
 		irc.joinQuery( parts[1] );
 		break;
 

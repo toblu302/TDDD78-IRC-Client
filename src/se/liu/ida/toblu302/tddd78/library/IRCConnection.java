@@ -169,7 +169,6 @@ public class IRCConnection
 
 	    case NUMERIC:
 		handleNumeric(Message.getNumericCode(message), message);
-		System.out.println(Message.getNumericCode(message));
 		break;
 
 	    case OTHER:
@@ -192,6 +191,10 @@ public class IRCConnection
 		//channel got a topic
 		break;
 
+	    case ERR_NOSUCHCHANNEL:
+		//invalid channel
+		break;
+
 	    case RPL_NAMREPLY:
 		String channelName = Message.getChannelString(message);
 		Talkable t = this.getTalkableFromName(channelName);
@@ -202,10 +205,6 @@ public class IRCConnection
 		{
 		    t.addUser(name);
 		}
-		break;
-
-	    case RPL_ENDOFNAMES:
-		//
 		break;
 
 	    default:
