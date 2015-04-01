@@ -45,6 +45,11 @@ public final class Message
 	    return MessageType.CHANNEL;
 	}
 
+	if( message.contains(" NICK :") )
+	{
+	    return MessageType.NAMECHANGE;
+	}
+
 	else if( message.contains("PRIVMSG ") )
 	{
 	    return MessageType.PRIVATE;

@@ -11,6 +11,8 @@ public class IRCConnection
 {
     private Collection<IRCListener> listeners = new ArrayList<>();
 
+    private boolean successfullyConnected = false;
+
     private Connection connection;
     private String userName;
     private String realName;
@@ -43,6 +45,8 @@ public class IRCConnection
 
     public void joinChannel(String channelName)
     {
+	if(!successfullyConnected) { return; }
+
 	Talkable t = new Talkable(channelName, this.connection);
 	t.join();
 	talkables.add(t);
@@ -58,6 +62,8 @@ public class IRCConnection
 
     public void joinQuery(String userName)
     {
+	if(!successfullyConnected) { return; }
+
 	Talkable t = new Talkable(userName, this.connection);
 	talkables.add(t);
 
@@ -100,6 +106,8 @@ public class IRCConnection
 
     public void talk(String msg)
     {
+	if(!successfullyConnected) { return; }
+
 	if( this.selectedTalkable != null )
 	{
 	    this.selectedTalkable.talk(msg);
@@ -163,6 +171,22 @@ public class IRCConnection
 		notifyListeners(new IRCEvent(IRCEventType.NEWQUERYMESSAGE));
 		break;
 
+	    case NAMECHANGE:
+		String oldName = Message.getUserString(message);
+		String newName = Message.getMessageString(message);
+
+		if(oldName.equals(this.userName))
+		{
+		    this.userName = newName;
+		}
+
+		for (Talkable talkable : talkables)
+		{
+		    talkable.changeUserName(oldName, newName);
+		}
+		notifyListeners(new IRCEvent(IRCEventType.CHANGEDNAME));
+		break;
+
 	    case PING:
 		connection.write("PONG");
 		break;
@@ -183,6 +207,10 @@ public class IRCConnection
     {
 	switch( NumericReply.getNumericReply(numericCode) )
 	{
+	    case RPL_MYINFO:
+		successfullyConnected = true;
+		break;
+
 	    case RPL_NOTOPIC:
 		//channel doesn't have a topic
 		break;
@@ -203,10 +231,19 @@ public class IRCConnection
 		String[] parts = message.substring(start+channelName.length()+2).split(" ");
 		for (String name : parts)
 		{
-		    t.addUser(name);
+		    if( name.charAt(0) == '+' || name.charAt(0) == '-' || name.charAt(0) == '@' || name.charAt(0) == '%')
+		    {
+			t.addUser(name.substring(1), name.charAt(0) );
+		    }
+		    else
+		    {
+			t.addUser(name, ' ' );
+		    }
 		}
 		break;
 
+	    case NOT_IMPLEMENTED:
+		break;
 	    default:
 		break;
 	}

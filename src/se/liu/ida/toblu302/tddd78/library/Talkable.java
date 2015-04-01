@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Talkable
 {
     private String name;
-    private ArrayList<String> currentUsers = new ArrayList<>();
+    private ArrayList<listedUser> currentUsers = new ArrayList<>();
     private Connection connection;
     private IRCLog log = new IRCLog();
 
@@ -45,13 +45,40 @@ public class Talkable
         log.add("<" + username + "> " + message);
     }
 
-    public void addUser(String name)
+    public void addUser(String name, char mode)
     {
-        currentUsers.add(name);
+        currentUsers.add( new listedUser(name, mode) );
+    }
+
+    public void changeUserName(String oldName, String newName)
+    {
+        for (listedUser user: currentUsers)
+        {
+            if( oldName.equals(user.getUserName()) )
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append(oldName);
+                sb.append(" is now known as ");
+                sb.append(newName);
+                addLog("", sb.toString() );
+                user.changeName(newName);
+                break;
+            }
+        }
+    }
+
+    public void removeUser(String name)
+    {
+        currentUsers.remove(name);
     }
 
     public ArrayList<String> getCurrentUsers()
     {
-        return currentUsers;
+        ArrayList<String> returnList = new ArrayList<>();
+        for (listedUser user: currentUsers)
+        {
+            returnList.add(user.toString());
+        }
+        return returnList;
     }
 }

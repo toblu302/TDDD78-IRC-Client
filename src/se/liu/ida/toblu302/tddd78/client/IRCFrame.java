@@ -136,11 +136,12 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     {
         switch( e.getEventType() )
         {
+            case CHANGEDNAME:
             case CHANGEDCHANNEL:
                 connectedUsers.removeAllUsers();
                 if(irc.getChannelUsers() != null)
                 {
-                    connectedUsers.addMultipleUsers(irc.getChannelUsers());
+                    connectedUsers.addMultipleUsers( irc.getChannelUsers() );
                 }
             case NEWMESSAGE:
             case NEWQUERYMESSAGE:
