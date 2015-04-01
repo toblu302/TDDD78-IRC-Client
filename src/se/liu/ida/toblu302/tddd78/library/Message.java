@@ -1,5 +1,10 @@
 package se.liu.ida.toblu302.tddd78.library;
 
+
+/**
+ * Utility class to interpret the new incoming messages from the IRC server.
+ */
+
 public final class Message
 {
     private Message(){}

@@ -10,6 +10,9 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+/**
+ * A JFrame which contains and manages everything needed to connect to (and use) an IRC server.
+ */
 public class IRCFrame extends JFrame implements IRCListener, InputListener, TreeSelectionListener
 {
     private IRCConnection irc;

@@ -3,6 +3,11 @@ package se.liu.ida.toblu302.tddd78.client;
 import javax.swing.*;
 import java.awt.*;
 
+
+/**
+ * A JComponent which keeps a chatlog.
+ * Is a JTree inside of a JPanel. Uses GridBagLayout for scalability.
+ */
 public class ChatLogComponent extends JPanel
 {
     private JTextArea textArea = new JTextArea();
@@ -24,7 +29,7 @@ public class ChatLogComponent extends JPanel
 
 	scrollPane = new JScrollPane(textArea);
 
-	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+	scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 	this.add(scrollPane, c);
     }

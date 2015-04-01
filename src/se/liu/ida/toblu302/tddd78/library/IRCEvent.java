@@ -1,5 +1,9 @@
 package se.liu.ida.toblu302.tddd78.library;
 
+/**
+ * Represents a thing that happened on IRC.
+ * @see IRCEventType
+ */
 public class IRCEvent
 {
     private IRCEventType eventType;

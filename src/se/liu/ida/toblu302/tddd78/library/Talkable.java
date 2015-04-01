@@ -1,11 +1,15 @@
 package se.liu.ida.toblu302.tddd78.library;
 
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Represents something (channel, user) which can be talked to on IRC.
+ */
 public class Talkable
 {
     private String name;
-    private ArrayList<listedUser> currentUsers = new ArrayList<>();
+    private List<listedUser> currentUsers = new ArrayList<>();
     private Connection connection;
     private IRCLog log = new IRCLog();
 

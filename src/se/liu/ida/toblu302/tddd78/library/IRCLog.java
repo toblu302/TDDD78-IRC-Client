@@ -3,6 +3,9 @@ package se.liu.ida.toblu302.tddd78.library;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Maintains a log of IRC messages.
+ */
 public class IRCLog
 {
     private Collection<String> log = new ArrayList<>();

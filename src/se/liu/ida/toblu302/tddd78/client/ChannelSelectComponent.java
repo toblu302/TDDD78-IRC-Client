@@ -5,6 +5,11 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
 
+
+/**
+ * A component which lets you select a channel in a tree.
+ * Is a JTree inside of a JPanel. Uses GridBagLayout for scalability.
+ */
 public class ChannelSelectComponent extends JPanel
 {
     private JTree channelSelector = null;

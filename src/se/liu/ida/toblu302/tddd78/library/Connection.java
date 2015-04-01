@@ -8,6 +8,9 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * Represents a connection to a server, which are read/written to using BufferedWriter and BufferedReader.
+ */
 public class Connection
 {
     private String server = null;

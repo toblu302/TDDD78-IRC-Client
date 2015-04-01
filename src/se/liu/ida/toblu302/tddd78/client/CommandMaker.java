@@ -1,11 +1,16 @@
 package se.liu.ida.toblu302.tddd78.client;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+/**
+ * This class creates and stores the various different Commands which a user can enter.
+ * @see Command
+ */
 public class CommandMaker
 {
-    private List<Command> commands = new ArrayList<>();
+    private Collection<Command> commands = new ArrayList<>();
 
     public CommandMaker()
     {

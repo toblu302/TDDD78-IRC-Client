@@ -123,6 +123,7 @@ public class IRCConnection
 	{
 	    return selectedTalkable.getLog();
 	}
+
 	return log.toString();
     }
 

@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Lets the user enter some input, which is then sent to the InputListeners in listeners.
+ * @see InputListener
+ */
 public class InputComponent extends JTextField
 {
     private Collection<InputListener> listeners = new ArrayList<>();

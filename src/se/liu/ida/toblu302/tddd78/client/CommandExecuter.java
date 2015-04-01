@@ -2,6 +2,9 @@ package se.liu.ida.toblu302.tddd78.client;
 
 import se.liu.ida.toblu302.tddd78.library.IRCConnection;
 
+/**
+ * This class executes with user-entered commands on an IRCConnection.
+ */
 public class CommandExecuter
 {
     private IRCConnection irc;

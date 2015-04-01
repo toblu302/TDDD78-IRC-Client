@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * A JComponent which keeps a list of all the users in a channel.
+ * Is a JTree inside of a JPanel. Uses GridBagLayout for scalability.
+ */
 public class ConnectedUsersComponent extends JPanel
 {
     private JList list;
@@ -27,7 +31,7 @@ public class ConnectedUsersComponent extends JPanel
 
 	scrollPane = new JScrollPane(list);
 
-	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+	scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 	this.add(scrollPane, c);
 
@@ -35,7 +39,7 @@ public class ConnectedUsersComponent extends JPanel
 	removeAllUsers();
     }
 
-    public void addMultipleUsers(ArrayList<String> names)
+    public void addMultipleUsers(Iterable<String> names)
     {
 	for (String name : names)
 	{
