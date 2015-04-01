@@ -13,6 +13,7 @@ public class CommandMaker
 	commands.add(new Command(CommandType.NICK, "nick", 1));
 	commands.add(new Command(CommandType.CHANNEL, "join", 1));
 	commands.add(new Command(CommandType.MSG, "msg", 1));
+	commands.add(new Command(CommandType.PART, "leave", 1));
     }
 
     public Command getCommand(String[] parts)

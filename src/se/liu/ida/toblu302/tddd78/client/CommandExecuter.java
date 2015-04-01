@@ -47,6 +47,10 @@ public class CommandExecuter
 		irc.joinQuery( parts[1] );
 		break;
 
+	    case PART:
+		irc.leaveChannel( parts[1] );
+		break;
+
 	    default:
 		break;
 	}
