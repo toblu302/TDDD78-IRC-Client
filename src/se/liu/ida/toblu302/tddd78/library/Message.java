@@ -55,6 +55,16 @@ public final class Message
 	    return MessageType.NAMECHANGE;
 	}
 
+	if( message.contains(" JOIN :") )
+	{
+	    return MessageType.JOIN;
+	}
+
+	if( message.contains(" QUIT :") )
+	{
+	    return MessageType.QUIT;
+	}
+
 	else if( message.contains("PRIVMSG ") )
 	{
 	    return MessageType.PRIVATE;

@@ -11,6 +11,16 @@ public enum MessageType
     CHANNEL,
 
     /**
+     * Someone joined a channel.
+     */
+    JOIN,
+
+    /**
+     * Someone quit a channel.
+     */
+    QUIT,
+
+    /**
      * Someone changed their name.
      */
     NAMECHANGE,

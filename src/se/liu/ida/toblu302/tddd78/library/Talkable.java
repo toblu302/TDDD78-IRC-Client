@@ -60,11 +60,7 @@ public class Talkable
         {
             if( oldName.equals(user.getUserName()) )
             {
-                StringBuilder sb = new StringBuilder();
-                sb.append(oldName);
-                sb.append(" is now known as ");
-                sb.append(newName);
-                addLog("", sb.toString() );
+                addLog("", oldName + " is now known as " + newName);
                 user.changeName(newName);
                 break;
             }
@@ -73,7 +69,14 @@ public class Talkable
 
     public void removeUser(String name)
     {
-        currentUsers.remove(name);
+        for (listedUser user:currentUsers )
+        {
+            if( user.getUserName().equals(name) )
+            {
+                currentUsers.remove(user);
+                break;
+            }
+        }
     }
 
     public ArrayList<String> getCurrentUsers()

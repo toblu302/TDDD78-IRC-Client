@@ -21,6 +21,16 @@ public enum IRCEventType
     LEFTCHANNEL,
 
     /**
+     * A new user joined a channel.
+     */
+    NEWUSER,
+
+    /**
+     * A user disconnected.
+     */
+    USERQUIT,
+
+    /**
      * A new message.
      */
     NEWMESSAGE,

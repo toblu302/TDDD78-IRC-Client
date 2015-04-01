@@ -160,6 +160,23 @@ public class IRCConnection
 		t.addLog(userName, messageString);
 		break;
 
+	    case JOIN:
+		String newUser = Message.getUserString(message);
+		String channel = Message.getMessageString(message);
+		t = getTalkableFromName(channel);
+		t.addUser(newUser, ' ');
+		notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
+		break;
+
+	    case QUIT:
+		userName = Message.getUserString(message);
+		for (Talkable talkable : talkables)
+		{
+		    talkable.removeUser(userName);
+		}
+		notifyListeners(new IRCEvent(IRCEventType.USERQUIT));
+		break;
+
 	    case PRIVATE:
 		userName = Message.getUserString(message);
 		messageString = Message.getMessageString(message);
