@@ -42,7 +42,7 @@ public class CommandExecuter
 		irc.changeNick( parts[1] );
 		break;
 
-	    case CHANNEL:
+	    case JOIN:
 		irc.joinChannel( parts[1] );
 		break;
 

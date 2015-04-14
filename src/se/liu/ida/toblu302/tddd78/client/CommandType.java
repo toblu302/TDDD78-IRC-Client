@@ -19,7 +19,7 @@ public enum CommandType
     /**
      * Join a channel.
      */
-    CHANNEL,
+    JOIN,
 
     /**
      * Send a private message to a user

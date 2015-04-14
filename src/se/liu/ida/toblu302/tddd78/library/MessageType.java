@@ -8,12 +8,12 @@ public enum MessageType
     /**
      * New message in a channel.
      */
-    CHANNEL,
+    CHANNELMESSAGE,
 
     /**
      * Someone joined a channel.
      */
-    JOIN,
+    USERJOINED,
 
     /**
      * Someone quit a channel.
@@ -28,7 +28,7 @@ public enum MessageType
     /**
      * New private message.
      */
-    PRIVATE,
+    PRIVATEMESSAGE,
 
     /**
      * IRC-server pinged you (to check if you're still there).

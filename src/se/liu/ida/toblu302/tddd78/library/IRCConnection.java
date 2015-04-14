@@ -147,51 +147,46 @@ public class IRCConnection
     {
 	log.add(message);
 
-	String channelName, userName, messageString;
 	Talkable t;
+
+	String user = Message.getUserString(message);
+	String channel = Message.getChannelString(message);
+	String userMessage= Message.getMessageString(message);
 
 	switch(Message.getMessageType(message))
 	{
-	    case CHANNEL:
-		channelName = Message.getChannelString(message);
-		userName = Message.getUserString(message);
-		messageString = Message.getMessageString(message);
-		t = getTalkableFromName(channelName);
-		t.addLog(userName, messageString);
+	    case CHANNELMESSAGE:
+		t = getTalkableFromName(channel);
+		t.addLog(user, userMessage);
 		break;
 
-	    case JOIN:
-		String newUser = Message.getUserString(message);
-		String channel = Message.getMessageString(message);
-		t = getTalkableFromName(channel);
-		t.addUser(newUser, ' ');
+	    case USERJOINED:
+		t = getTalkableFromName(userMessage);
+		t.addUser(user, ' ');
 		notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
 		break;
 
 	    case QUIT:
-		userName = Message.getUserString(message);
 		for (Talkable talkable : talkables)
 		{
-		    talkable.removeUser(userName);
+		    talkable.removeUser(user);
 		}
 		notifyListeners(new IRCEvent(IRCEventType.USERQUIT));
 		break;
 
-	    case PRIVATE:
-		userName = Message.getUserString(message);
-		messageString = Message.getMessageString(message);
-		if(!inQuery(userName))
+	    case PRIVATEMESSAGE:
+		if(!inQuery(user))
 		{
-		    joinQuery(userName);
+		    joinQuery(user);
 		}
-		t = getTalkableFromName(userName);
-		t.addLog(userName, messageString);
+		t = getTalkableFromName(user);
+		t.addLog(user, userMessage);
 		notifyListeners(new IRCEvent(IRCEventType.NEWQUERYMESSAGE));
 		break;
 
 	    case NAMECHANGE:
-		String oldName = Message.getUserString(message);
-		String newName = Message.getMessageString(message);
+		String oldName = user;
+		String newName = userMessage;
 
 		if(oldName.equals(this.userName))
 		{
@@ -210,7 +205,7 @@ public class IRCConnection
 		break;
 
 	    case NUMERIC:
-		handleNumeric(Message.getNumericCode(message), message);
+		handleNumeric( Message.getNumericCode(message), message );
 		break;
 
 	    case OTHER:

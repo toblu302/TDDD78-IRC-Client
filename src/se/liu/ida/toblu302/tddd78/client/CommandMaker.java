@@ -16,7 +16,7 @@ public class CommandMaker
     {
 	commands.add(new Command(CommandType.QUIT, "quit", 0));
 	commands.add(new Command(CommandType.NICK, "nick", 1));
-	commands.add(new Command(CommandType.CHANNEL, "join", 1));
+	commands.add(new Command(CommandType.JOIN, "join", 1));
 	commands.add(new Command(CommandType.MSG, "msg", 1));
 	commands.add(new Command(CommandType.PART, "leave", 1));
     }
