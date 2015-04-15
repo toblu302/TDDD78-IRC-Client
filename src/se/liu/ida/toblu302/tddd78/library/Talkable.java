@@ -9,7 +9,7 @@ import java.util.List;
 public class Talkable
 {
     private String name;
-    private List<listedUser> currentUsers = new ArrayList<>();
+    private List<ListedUser> currentUsers = new ArrayList<>();
     private Connection connection;
     private IRCLog log = new IRCLog();
 
@@ -51,12 +51,12 @@ public class Talkable
 
     public void addUser(String name, char mode)
     {
-        currentUsers.add(new listedUser(name, mode));
+        currentUsers.add(new ListedUser(name, mode));
     }
 
     public void changeUserName(String oldName, String newName)
     {
-        for (listedUser user : currentUsers)
+        for (ListedUser user : currentUsers)
         {
             if (oldName.equals(user.getUserName()))
             {
@@ -69,7 +69,7 @@ public class Talkable
 
     public void removeUser(String name)
     {
-        for (listedUser user : currentUsers)
+        for (ListedUser user : currentUsers)
         {
             if (user.getUserName().equals(name))
             {
@@ -82,7 +82,7 @@ public class Talkable
     public ArrayList<String> getCurrentUsers()
     {
         ArrayList<String> returnList = new ArrayList<>();
-        for (listedUser user : currentUsers)
+        for (ListedUser user : currentUsers)
         {
             returnList.add(user.toString());
         }

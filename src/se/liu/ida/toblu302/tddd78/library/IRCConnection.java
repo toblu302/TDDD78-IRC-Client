@@ -40,6 +40,7 @@ public class IRCConnection
 
     public void changeNick(String newNick)
     {
+        //the "userName" variable doesn't get updated here, because the new NICK might not be accepted by the server
         connection.write("NICK " + newNick + "\r\n");
     }
 
@@ -194,17 +195,15 @@ public class IRCConnection
                 break;
 
             case NAMECHANGE:
-                String oldName = user;
-                String newName = userMessage;
 
-                if (oldName.equals(this.userName))
+                if (user.equals(this.userName))
                 {
-                    this.userName = newName;
+                    this.userName = userMessage;
                 }
 
                 for (Talkable talkable : talkables)
                 {
-                    talkable.changeUserName(oldName, newName);
+                    talkable.changeUserName(user, userMessage);
                 }
                 notifyListeners(new IRCEvent(IRCEventType.CHANGEDNAME));
                 break;

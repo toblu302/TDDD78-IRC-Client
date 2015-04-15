@@ -48,7 +48,7 @@ public enum NumericReply
     private final int replyCode;
     private final static NumericReply[] REPLIES = NumericReply.values();
 
-    private NumericReply(int replyCode)
+    NumericReply(int replyCode)
     {
         this.replyCode = replyCode;
     }

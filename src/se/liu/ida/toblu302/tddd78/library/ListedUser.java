@@ -4,12 +4,12 @@ package se.liu.ida.toblu302.tddd78.library;
  * Represents a user for listing in a channel.
  * This is needed because the mode and the username of a user can be updated separately.
  */
-public class listedUser
+public class ListedUser
 {
     private String userName;
     private char mode;
 
-    public listedUser(final String userName, final char mode)
+    public ListedUser(final String userName, final char mode)
     {
         this.userName = userName;
         this.mode = mode;
