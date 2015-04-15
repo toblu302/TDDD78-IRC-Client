@@ -83,7 +83,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         irc = new IRCConnection("irc.rizon.net", 6667, "tobleu", "Sodjwe  Dofigijrt");
         irc.addListener(this);
         irc.joinChannel("#sdfff");
-        irc.selectChannel("#sdfff");
+        irc.selectTalkable("#sdfff");
 
         commandHandler = new CommandExecuter(irc);
 
@@ -132,7 +132,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     {
         String channelName = JOptionPane.showInputDialog(null, "Join channel:");
         this.irc.joinChannel(channelName);
-        this.irc.selectChannel(channelName);
+        this.irc.selectTalkable(channelName);
     }
 
     public void onIRCEvent(IRCEvent e)
@@ -211,7 +211,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
         if (channel != null)
         {
-            irc.selectChannel(channel.toString());
+            irc.selectTalkable(channel.toString());
         }
     }
 

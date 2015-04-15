@@ -17,7 +17,9 @@ public class IRCConnection
     private String userName;
     private String realName;
 
-    private Collection<Talkable> talkables = new ArrayList<>();
+    private Collection<Channel> channels = new ArrayList<>();
+    private Collection<Query> queries = new ArrayList<>();
+
     private Talkable selectedTalkable = null;
 
     private Thread loggingThread = null;
@@ -51,17 +53,17 @@ public class IRCConnection
             return;
         }
 
-        Talkable t = new Talkable(channelName, this.connection);
-        t.join();
-        talkables.add(t);
+        Channel c = new Channel(channelName, this.connection);
+        c.join();
+        channels.add(c);
 
         notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, channelName));
     }
 
     private boolean inQuery(String userName)
     {
-        Talkable t = getTalkableFromName(userName);
-        return (t != null);
+        Query q = getQueryFromName(userName);
+        return (q != null);
     }
 
     public void joinQuery(String userName)
@@ -71,31 +73,30 @@ public class IRCConnection
             return;
         }
 
-        Talkable t = new Talkable(userName, this.connection);
-        talkables.add(t);
+        Query q = new Query(userName, this.connection);
+        queries.add(q);
 
         notifyListeners(new IRCEvent(IRCEventType.NEWQUERY, userName));
     }
 
     public void leaveChannel(String name)
     {
-        Talkable t = this.getTalkableFromName(name);
-        t.leave();
-        talkables.remove(t);
+        Channel c = this.getChannelFromName(name);
+
+        if(c == null)
+        {
+            return;
+        }
+
+        c.leave();
+        channels.remove(c);
 
         notifyListeners(new IRCEvent(IRCEventType.LEFTCHANNEL, name));
     }
 
-    public void selectChannel(String channelName)
+    public void selectTalkable(String talkableName)
     {
-        Talkable t = null;
-        for (Talkable talkable : talkables)
-        {
-            if (talkable.getName().equals(channelName))
-            {
-                t = talkable;
-            }
-        }
+        Talkable t = getTalkableFromName(talkableName);
 
         if (t != null)
         {
@@ -143,7 +144,14 @@ public class IRCConnection
         {
             return null;
         }
-        return selectedTalkable.getCurrentUsers();
+
+        if( channels.contains(selectedTalkable) )
+        {
+            Channel c = (Channel)selectedTalkable;
+            return c.getCurrentUsers();
+        }
+
+        return null;
     }
 
     public void quitConnection()
@@ -157,7 +165,7 @@ public class IRCConnection
     {
         log.add(message);
 
-        Talkable t;
+        Channel c;
 
         String user = Message.getUserString(message);
         String channel = Message.getChannelString(message);
@@ -166,20 +174,20 @@ public class IRCConnection
         switch (Message.getMessageType(message))
         {
             case CHANNELMESSAGE:
-                t = getTalkableFromName(channel);
-                t.addLog(user, userMessage);
+                c = getChannelFromName(channel);
+                c.addLog(user, userMessage);
                 break;
 
             case USERJOINED:
-                t = getTalkableFromName(userMessage);
-                t.addUser(user, ' ');
+                c = getChannelFromName(userMessage);
+                c.addUser(user, ' ');
                 notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
                 break;
 
             case QUIT:
-                for (Talkable talkable : talkables)
+                for (Channel Channel : channels)
                 {
-                    talkable.removeUser(user);
+                    Channel.removeUser(user);
                 }
                 notifyListeners(new IRCEvent(IRCEventType.USERQUIT));
                 break;
@@ -189,8 +197,8 @@ public class IRCConnection
                 {
                     joinQuery(user);
                 }
-                t = getTalkableFromName(user);
-                t.addLog(user, userMessage);
+                Query q = getQueryFromName(user);
+                q.addLog(user, userMessage);
                 notifyListeners(new IRCEvent(IRCEventType.NEWQUERYMESSAGE));
                 break;
 
@@ -201,9 +209,9 @@ public class IRCConnection
                     this.userName = userMessage;
                 }
 
-                for (Talkable talkable : talkables)
+                for (Channel Channel : channels)
                 {
-                    talkable.changeUserName(user, userMessage);
+                    Channel.changeUserName(user, userMessage);
                 }
                 notifyListeners(new IRCEvent(IRCEventType.CHANGEDNAME));
                 break;
@@ -247,7 +255,7 @@ public class IRCConnection
 
             case RPL_NAMREPLY:
                 String channelName = Message.getChannelString(message);
-                Talkable t = this.getTalkableFromName(channelName);
+                Channel t = this.getChannelFromName(channelName);
 
                 int start = message.indexOf(channelName);
                 String[] parts = message.substring(start + channelName.length() + 2).split(" ");
@@ -270,14 +278,39 @@ public class IRCConnection
         }
     }
 
-    private Talkable getTalkableFromName(String channelName)
+    private Talkable getTalkableFromName(String talkableName)
     {
-        Talkable t = null;
-        for (Talkable talkable : talkables)
+        Talkable t = getChannelFromName(talkableName);
+        if( t == null)
         {
-            if (talkable.getName().equals(channelName))
+            t = getQueryFromName(talkableName);
+        }
+
+        return t;
+    }
+
+    private Query getQueryFromName(String queryName)
+    {
+        Query t = null;
+        for (Query query : queries)
+        {
+            if (query.getName().equals(queryName))
             {
-                t = talkable;
+                t = query;
+            }
+        }
+
+        return t;
+    }
+
+    private Channel getChannelFromName(String channelName)
+    {
+        Channel t = null;
+        for (Channel Channel : channels)
+        {
+            if (Channel.getName().equals(channelName))
+            {
+                t = Channel;
             }
         }
 
