@@ -21,66 +21,61 @@ public class Connection
 
     public Connection(String server, int port)
     {
-	this.server = server;
-	try
-	{
-	    this.socket = new Socket(server, port);
+        this.server = server;
+        try
+        {
+            this.socket = new Socket(server, port);
 
-	    writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream( )));
-	    reader = new BufferedReader(new InputStreamReader(socket.getInputStream( )));
-	}
-	catch(UnknownHostException e)
-	{
-	    e.printStackTrace();
-	    System.out.println("Unknown server.");
-	}
-	catch(IOException e)
-	{
-	    e.printStackTrace();
-	}
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (UnknownHostException e)
+        {
+            e.printStackTrace();
+            System.out.println("Unknown server.");
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public String read()
     {
-	String line = "";
-	try
-	{
-	    line = reader.readLine();
-	}
-	catch(IOException e)
-	{
-	    e.printStackTrace();
-	}
-	return line;
+        String line = "";
+        try
+        {
+            line = reader.readLine();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return line;
     }
 
     public void write(String message)
     {
-	try
-	{
-	    writer.write(message);
-	    writer.flush();
-	}
-	catch(IOException e)
-	{
-	    e.printStackTrace();
-	}
+        try
+        {
+            writer.write(message);
+            writer.flush();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void close()
     {
-	try
-	{
-	    socket.shutdownInput();
-	    socket.shutdownOutput();
-	    writer.close();
-	    reader.close();
-	    socket.close();
-	}
-	catch(IOException e)
-	{
-	    e.printStackTrace();
-	}
+        try
+        {
+            socket.shutdownInput();
+            socket.shutdownOutput();
+            writer.close();
+            reader.close();
+            socket.close();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
 
     }
 }

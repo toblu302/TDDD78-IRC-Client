@@ -12,13 +12,14 @@ public class IRCLog
 
     public void add(String msg)
     {
-        if(msg != null)
+        if (msg != null)
         {
             log.add(msg);
         }
     }
 
-    @Override public String toString()
+    @Override
+    public String toString()
     {
         StringBuilder textLog = new StringBuilder();
         for (String o : log)

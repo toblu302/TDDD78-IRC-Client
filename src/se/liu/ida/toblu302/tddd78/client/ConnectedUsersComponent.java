@@ -16,56 +16,56 @@ public class ConnectedUsersComponent extends JPanel
 
     public ConnectedUsersComponent()
     {
-	this.setLayout(new GridBagLayout());
+        this.setLayout(new GridBagLayout());
 
-	listModel = new DefaultListModel();
-	list = new JList(listModel);
+        listModel = new DefaultListModel();
+        list = new JList(listModel);
 
-	GridBagConstraints c = new GridBagConstraints();
-	c.fill = GridBagConstraints.BOTH;
-	c.gridx = 0;
-	c.gridy = 0;
-	c.weightx = 1;
-	c.weighty = 1;
-	this.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        this.setLayout(new GridBagLayout());
 
-	scrollPane = new JScrollPane(list);
+        scrollPane = new JScrollPane(list);
 
-	scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-	this.add(scrollPane, c);
+        this.add(scrollPane, c);
 
-	this.addUser("poop");
-	removeAllUsers();
+        this.addUser("poop");
+        removeAllUsers();
     }
 
     public void addMultipleUsers(Iterable<String> names)
     {
-	for (String name : names)
-	{
-	    this.addUser(name);
-	}
+        for (String name : names)
+        {
+            this.addUser(name);
+        }
     }
 
     public void removeAllUsers()
     {
-	listModel.removeAllElements();
+        listModel.removeAllElements();
     }
 
     public void addUser(String name)
     {
-	if(listModel.indexOf(name) == -1)
-	{
-	    listModel.addElement(name);
-	}
+        if (listModel.indexOf(name) == -1)
+        {
+            listModel.addElement(name);
+        }
     }
 
     public void removeUser(String name)
     {
-	int index = listModel.indexOf(name);
-	if(index != -1)
-	{
-	    listModel.removeElementAt(index);
-	}
+        int index = listModel.indexOf(name);
+        if (index != -1)
+        {
+            listModel.removeElementAt(index);
+        }
     }
 }

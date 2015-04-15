@@ -12,51 +12,51 @@ public class CommandExecuter
 
     public CommandExecuter(final IRCConnection irc)
     {
-	this.irc = irc;
+        this.irc = irc;
     }
 
     public void executeCommand(String command)
     {
-	if(!command.startsWith("/"))
-	{
-	    return;
-	}
+        if (!command.startsWith("/"))
+        {
+            return;
+        }
 
-	String[] parts = command.substring(1).split(" ");
+        String[] parts = command.substring(1).split(" ");
 
-	Command c = maker.getCommand(parts);
+        Command c = maker.getCommand(parts);
 
-	if(c == null)
-	{
-	    return;
-	}
+        if (c == null)
+        {
+            return;
+        }
 
-	switch(c.getType())
-	{
-	    case QUIT:
-		irc.quitConnection();
-		System.exit(0);
-		break;
+        switch (c.getType())
+        {
+            case QUIT:
+                irc.quitConnection();
+                System.exit(0);
+                break;
 
-	    case NICK:
-		irc.changeNick( parts[1] );
-		break;
+            case NICK:
+                irc.changeNick(parts[1]);
+                break;
 
-	    case JOIN:
-		irc.joinChannel( parts[1] );
-		break;
+            case JOIN:
+                irc.joinChannel(parts[1]);
+                break;
 
-	    case MSG:
-		irc.joinQuery( parts[1] );
-		break;
+            case MSG:
+                irc.joinQuery(parts[1]);
+                break;
 
-	    case PART:
-		irc.leaveChannel( parts[1] );
-		break;
+            case PART:
+                irc.leaveChannel(parts[1]);
+                break;
 
-	    default:
-		break;
-	}
+            default:
+                break;
+        }
 
     }
 }

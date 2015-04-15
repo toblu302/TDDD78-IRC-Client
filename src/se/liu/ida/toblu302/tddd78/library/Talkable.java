@@ -31,7 +31,7 @@ public class Talkable
 
     public void talk(String msg)
     {
-	connection.write("PRIVMSG " + this.name + " :" + msg + "\r\n");
+        connection.write("PRIVMSG " + this.name + " :" + msg + "\r\n");
     }
 
     public String getName()
@@ -51,14 +51,14 @@ public class Talkable
 
     public void addUser(String name, char mode)
     {
-        currentUsers.add( new listedUser(name, mode) );
+        currentUsers.add(new listedUser(name, mode));
     }
 
     public void changeUserName(String oldName, String newName)
     {
-        for (listedUser user: currentUsers)
+        for (listedUser user : currentUsers)
         {
-            if( oldName.equals(user.getUserName()) )
+            if (oldName.equals(user.getUserName()))
             {
                 addLog("", oldName + " is now known as " + newName);
                 user.changeName(newName);
@@ -69,9 +69,9 @@ public class Talkable
 
     public void removeUser(String name)
     {
-        for (listedUser user:currentUsers )
+        for (listedUser user : currentUsers)
         {
-            if( user.getUserName().equals(name) )
+            if (user.getUserName().equals(name))
             {
                 currentUsers.remove(user);
                 break;
@@ -82,7 +82,7 @@ public class Talkable
     public ArrayList<String> getCurrentUsers()
     {
         ArrayList<String> returnList = new ArrayList<>();
-        for (listedUser user: currentUsers)
+        for (listedUser user : currentUsers)
         {
             returnList.add(user.toString());
         }

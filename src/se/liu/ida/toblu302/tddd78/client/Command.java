@@ -10,9 +10,9 @@ public class Command
     private String cmd;
 
     /**
-     * @param type The type of argument which the command represents.
+     * @param type              The type of argument which the command represents.
      * @param numberOfArguments the number of arguments needed for the command to function.
-     * @param cmd the user input this command should represent.
+     * @param cmd               the user input this command should represent.
      */
     public Command(final CommandType type, final String cmd, final int numberOfArguments)
     {

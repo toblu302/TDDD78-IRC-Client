@@ -2,9 +2,9 @@ package se.liu.ida.toblu302.tddd78.library;
 
 /**
  * The various numeric replies which an IRC server can send.
- *
+ * <p>
  * For full details, see the IRC protocol. It details the cases when the numeric replies are going to be sent.
- *
+ * <p>
  * (Not all of them are implemented here)
  */
 public enum NumericReply
@@ -50,19 +50,19 @@ public enum NumericReply
 
     private NumericReply(int replyCode)
     {
-	this.replyCode = replyCode;
+        this.replyCode = replyCode;
     }
 
     public static NumericReply getNumericReply(int replyCode)
     {
-	for (NumericReply reply : REPLIES)
-	{
-	    if(reply.replyCode == replyCode)
-	    {
-		return reply;
-	    }
-	}
+        for (NumericReply reply : REPLIES)
+        {
+            if (reply.replyCode == replyCode)
+            {
+                return reply;
+            }
+        }
 
-	return NOT_IMPLEMENTED;
+        return NOT_IMPLEMENTED;
     }
 }

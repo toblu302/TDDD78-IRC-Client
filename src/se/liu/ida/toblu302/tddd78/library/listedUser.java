@@ -11,13 +11,13 @@ public class listedUser
 
     public listedUser(final String userName, final char mode)
     {
-	this.userName = userName;
-	this.mode = mode;
+        this.userName = userName;
+        this.mode = mode;
     }
 
     public void changeName(String newName)
     {
-	this.userName = newName;
+        this.userName = newName;
     }
 
     public String getUserName()
@@ -25,7 +25,8 @@ public class listedUser
         return this.userName;
     }
 
-    @Override public String toString()
+    @Override
+    public String toString()
     {
         return (this.mode + this.userName);
     }

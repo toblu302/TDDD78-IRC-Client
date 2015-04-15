@@ -35,15 +35,15 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
     public IRCFrame() throws HeadlessException
     {
-	super("IRC!");
+        super("IRC!");
 
         this.setJMenuBar(this.getIRCMenuBar());
-	textInput.addListener(this);
+        textInput.addListener(this);
 
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-        channelSelect.setPreferredSize( new Dimension( (int)(WIDTH * CHANNEL_LIST_WEIGHT), HEIGHT) );
+        channelSelect.setPreferredSize(new Dimension((int) (WIDTH * CHANNEL_LIST_WEIGHT), HEIGHT));
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
@@ -52,7 +52,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         c.gridwidth = 1;
         this.add(channelSelect, c);
 
-        chatLog.setPreferredSize( new Dimension( (int)(WIDTH * CHATLOG_WEIGHT), HEIGHT) );
+        chatLog.setPreferredSize(new Dimension((int) (WIDTH * CHATLOG_WEIGHT), HEIGHT));
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 0;
@@ -61,7 +61,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         c.gridwidth = 1;
         this.add(chatLog, c);
 
-        connectedUsers.setPreferredSize( new Dimension( (int)(WIDTH * USER_LIST_WEIGHT), HEIGHT) );
+        connectedUsers.setPreferredSize(new Dimension((int) (WIDTH * USER_LIST_WEIGHT), HEIGHT));
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 2;
         c.gridy = 0;
@@ -80,16 +80,16 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         this.add(textInput, c);
 
 
-	irc = new IRCConnection("irc.rizon.net", 6667, "tobleu", "Sodjwe  Dofigijrt");
+        irc = new IRCConnection("irc.rizon.net", 6667, "tobleu", "Sodjwe  Dofigijrt");
         irc.addListener(this);
-	irc.joinChannel("#sdfff");
-	irc.selectChannel("#sdfff");
+        irc.joinChannel("#sdfff");
+        irc.selectChannel("#sdfff");
 
         commandHandler = new CommandExecuter(irc);
 
         this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
-	this.pack();
-	this.setVisible(true);
+        this.pack();
+        this.setVisible(true);
     }
 
     private JMenuBar getIRCMenuBar()
@@ -118,10 +118,10 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private void quit()
     {
         int optionChosen = JOptionPane.showOptionDialog(null, "Do you want to quit?",
-   							    "Quit?", JOptionPane.YES_NO_OPTION,
-   							    JOptionPane.QUESTION_MESSAGE, null, null, null);
+                "Quit?", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, null, null);
 
-        if(optionChosen == 0)
+        if (optionChosen == 0)
         {
             irc.quitConnection();
             System.exit(0);
@@ -137,16 +137,16 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
     public void onIRCEvent(IRCEvent e)
     {
-        switch( e.getEventType() )
+        switch (e.getEventType())
         {
             case USERQUIT:
             case NEWUSER:
             case CHANGEDNAME:
             case CHANGEDCHANNEL:
                 connectedUsers.removeAllUsers();
-                if(irc.getChannelUsers() != null)
+                if (irc.getChannelUsers() != null)
                 {
-                    connectedUsers.addMultipleUsers( irc.getChannelUsers() );
+                    connectedUsers.addMultipleUsers(irc.getChannelUsers());
                 }
 
             case NEWMESSAGE:
@@ -155,15 +155,15 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
                 break;
 
             case JOINEDCHANNEL:
-                channelSelect.newChannel( e.getArgument() );
+                channelSelect.newChannel(e.getArgument());
                 break;
 
             case LEFTCHANNEL:
-                channelSelect.removeChannel( e.getArgument() );
+                channelSelect.removeChannel(e.getArgument());
                 break;
 
             case NEWQUERY:
-                channelSelect.newChannel( e.getArgument() );
+                channelSelect.newChannel(e.getArgument());
                 break;
 
             default:
@@ -186,11 +186,10 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     //InputListener - user entered some input
     public void recievedInput(String str)
     {
-        if(str.startsWith("/"))
+        if (str.startsWith("/"))
         {
             commandHandler.executeCommand(str);
-        }
-        else
+        } else
         {
             irc.talk(str);
         }
@@ -198,27 +197,27 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
     public void updateChatLog()
     {
-        chatLog.setText( irc.getLog() );
+        chatLog.setText(irc.getLog());
     }
 
     public void valueChanged(TreeSelectionEvent e)
     {
-        if(channelSelect.isRootSelected())
+        if (channelSelect.isRootSelected())
         {
             irc.selectRoot();
         }
 
         DefaultMutableTreeNode channel = channelSelect.selectedNode();
 
-        if(channel != null)
+        if (channel != null)
         {
-            irc.selectChannel( channel.toString() );
+            irc.selectChannel(channel.toString());
         }
     }
 
     public static void main(String[] args)
     {
-	IRCFrame window = new IRCFrame();
+        IRCFrame window = new IRCFrame();
     }
 
 }

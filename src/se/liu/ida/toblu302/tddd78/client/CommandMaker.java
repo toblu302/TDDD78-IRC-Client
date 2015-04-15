@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * This class creates and stores the various different Commands which a user can enter.
+ *
  * @see Command
  */
 public class CommandMaker
@@ -14,25 +15,25 @@ public class CommandMaker
 
     public CommandMaker()
     {
-	commands.add(new Command(CommandType.QUIT, "quit", 0));
-	commands.add(new Command(CommandType.NICK, "nick", 1));
-	commands.add(new Command(CommandType.JOIN, "join", 1));
-	commands.add(new Command(CommandType.MSG, "msg", 1));
-	commands.add(new Command(CommandType.PART, "leave", 1));
+        commands.add(new Command(CommandType.QUIT, "quit", 0));
+        commands.add(new Command(CommandType.NICK, "nick", 1));
+        commands.add(new Command(CommandType.JOIN, "join", 1));
+        commands.add(new Command(CommandType.MSG, "msg", 1));
+        commands.add(new Command(CommandType.PART, "leave", 1));
     }
 
     public Command getCommand(String[] parts)
     {
-	String cmd = parts[0];
-	int arguments = parts.length-1;
-	for (Command command : commands)
-	{
-	    if( command.getCmd().equals(cmd) && arguments==command.getNumberOfArguments() )
-	    {
-		return command;
-	    }
-	}
+        String cmd = parts[0];
+        int arguments = parts.length - 1;
+        for (Command command : commands)
+        {
+            if (command.getCmd().equals(cmd) && arguments == command.getNumberOfArguments())
+            {
+                return command;
+            }
+        }
 
-	return null;
+        return null;
     }
 }

@@ -8,6 +8,7 @@ import java.util.Collection;
 
 /**
  * Lets the user enter some input, which is then sent to the InputListeners in listeners.
+ *
  * @see InputListener
  */
 public class InputComponent extends JTextField
@@ -18,28 +19,29 @@ public class InputComponent extends JTextField
 
     public InputComponent()
     {
-	ActionListener finishedInput = new AbstractAction()
-    	{
-    	    @Override public void actionPerformed(ActionEvent e)
-	    {
-		notifyListeners( inputBox.getText() );
-		inputBox.setText("");
-	    }
-    	};
+        ActionListener finishedInput = new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                notifyListeners(inputBox.getText());
+                inputBox.setText("");
+            }
+        };
 
-	this.addActionListener(finishedInput);
+        this.addActionListener(finishedInput);
     }
 
     public void addListener(InputListener il)
     {
-	this.listeners.add(il);
+        this.listeners.add(il);
     }
 
     private void notifyListeners(String str)
     {
-	for (InputListener listener : listeners)
-	{
-	    listener.recievedInput(str);
-	}
+        for (InputListener listener : listeners)
+        {
+            listener.recievedInput(str);
+        }
     }
 }
