@@ -33,7 +33,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private final static double USER_LIST_WEIGHT = 0.2;
     private final static double CHATLOG_WEIGHT = 0.8;
 
-    public IRCFrame() throws HeadlessException
+    public IRCFrame(String server, int port, String username, String realName) throws HeadlessException
     {
         super("IRC!");
 
@@ -80,10 +80,8 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         this.add(textInput, c);
 
 
-        irc = new IRCConnection("irc.rizon.net", 6667, "tobleu", "Sodjwe  Dofigijrt");
+	irc = new IRCConnection(server, port, username, realName);
         irc.addListener(this);
-        irc.joinChannel("#sdfff");
-        irc.selectTalkable("#sdfff");
 
         commandHandler = new CommandExecuter(irc);
 
@@ -213,11 +211,6 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         {
             irc.selectTalkable(channel.toString());
         }
-    }
-
-    public static void main(String[] args)
-    {
-        IRCFrame window = new IRCFrame();
     }
 
 }
