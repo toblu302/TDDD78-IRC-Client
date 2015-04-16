@@ -15,23 +15,23 @@ public class CommandExecuter
         this.irc = irc;
     }
 
-    public void executeCommand(String command)
+    public void executeCommand(String commandString)
     {
-        if (!command.startsWith("/"))
+        if (!commandString.startsWith("/"))
         {
             return;
         }
 
-        String[] parts = command.substring(1).split(" ");
+        String[] parts = commandString.substring(1).split(" ");
 
-        Command c = maker.getCommand(parts);
+        Command command = maker.getCommand(parts);
 
-        if (c == null)
+        if (command == null)
         {
             return;
         }
 
-        switch (c.getType())
+        switch (command.getType())
         {
             case QUIT:
                 irc.quitConnection();

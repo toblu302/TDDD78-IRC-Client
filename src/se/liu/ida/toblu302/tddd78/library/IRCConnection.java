@@ -15,7 +15,6 @@ public class IRCConnection
 
     private Connection connection;
     private String userName;
-    private String realName;
 
     private Collection<Channel> channels = new ArrayList<>();
     private Collection<Query> queries = new ArrayList<>();
@@ -30,7 +29,6 @@ public class IRCConnection
     public IRCConnection(final String server, int port, String userName, String realName)
     {
         this.userName = userName;
-        this.realName = realName;
 
         this.connection = new Connection(server, port);
 
@@ -53,9 +51,9 @@ public class IRCConnection
             return;
         }
 
-        Channel c = new Channel(channelName, this.connection);
-        c.join();
-        channels.add(c);
+        Channel channel = new Channel(channelName, this.connection);
+        channel.join();
+        channels.add(channel);
 
         notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, channelName));
     }
@@ -81,15 +79,15 @@ public class IRCConnection
 
     public void leaveChannel(String name)
     {
-        Channel c = this.getChannelFromName(name);
+        Channel channel = this.getChannelFromName(name);
 
-        if(c == null)
+        if(channel == null)
         {
             return;
         }
 
-        c.leave();
-        channels.remove(c);
+        channel.leave();
+        channels.remove(channel);
 
         notifyListeners(new IRCEvent(IRCEventType.LEFTCHANNEL, name));
     }
@@ -138,17 +136,20 @@ public class IRCConnection
         return log.toString();
     }
 
-    public ArrayList<String> getChannelUsers()
+    public Iterable<String> getChannelUsers()
     {
         if (selectedTalkable == null)
         {
             return null;
         }
 
+        // If the currently selected talkable exists in channel,
+        // we can safely convert it to a Channel-object and use its getCurrentUsers()-method.
+        // "selectedTalkable" can exist in "queries" as well as "channels", this code check which it is in.
         if( channels.contains(selectedTalkable) )
         {
-            Channel c = (Channel)selectedTalkable;
-            return c.getCurrentUsers();
+            Channel channel = (Channel)selectedTalkable;
+            return channel.getCurrentUsers();
         }
 
         return null;
@@ -165,29 +166,29 @@ public class IRCConnection
     {
         log.add(message);
 
-        Channel c;
+        Channel channel;
 
         String user = Message.getUserString(message);
-        String channel = Message.getChannelString(message);
+        String channelName = Message.getChannelString(message);
         String userMessage = Message.getMessageString(message);
 
         switch (Message.getMessageType(message))
         {
             case CHANNELMESSAGE:
-                c = getChannelFromName(channel);
-                c.addLog(user, userMessage);
+                channel = getChannelFromName(channelName);
+                channel.addLog(user, userMessage);
                 break;
 
             case USERJOINED:
-                c = getChannelFromName(userMessage);
-                c.addUser(user, ' ');
+                channel = getChannelFromName(userMessage);
+                channel.addUser(user, ' ');
                 notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
                 break;
 
             case QUIT:
-                for (Channel Channel : channels)
+                for (Channel chan : channels)
                 {
-                    Channel.removeUser(user);
+                    chan.removeUser(user);
                 }
                 notifyListeners(new IRCEvent(IRCEventType.USERQUIT));
                 break;
@@ -209,9 +210,9 @@ public class IRCConnection
                     this.userName = userMessage;
                 }
 
-                for (Channel Channel : channels)
+                for (Channel chan : channels)
                 {
-                    Channel.changeUserName(user, userMessage);
+                    chan.changeUserName(user, userMessage);
                 }
                 notifyListeners(new IRCEvent(IRCEventType.CHANGEDNAME));
                 break;
@@ -253,6 +254,10 @@ public class IRCConnection
                 //invalid channel
                 break;
 
+            case ERR_NICKNAMEINUSE:
+                //invalid nickname
+                break;
+
             case RPL_NAMREPLY:
                 String channelName = Message.getChannelString(message);
                 Channel t = this.getChannelFromName(channelName);
@@ -273,6 +278,7 @@ public class IRCConnection
 
             case NOT_IMPLEMENTED:
                 break;
+
             default:
                 break;
         }
@@ -306,11 +312,11 @@ public class IRCConnection
     private Channel getChannelFromName(String channelName)
     {
         Channel t = null;
-        for (Channel Channel : channels)
+        for (Channel chan : channels)
         {
-            if (Channel.getName().equals(channelName))
+            if (chan.getName().equals(channelName))
             {
-                t = Channel;
+                t = chan;
             }
         }
 

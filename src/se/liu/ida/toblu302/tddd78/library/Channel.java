@@ -1,6 +1,7 @@
 package se.liu.ida.toblu302.tddd78.library;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  */
 public class Channel extends AbstractTalkable
 {
-    private List<ListedUser> currentUsers = new ArrayList<>();
+    private Collection<ListedUser> currentUsers = new ArrayList<>();
 
     public Channel(final String name, Connection connection)
     {
@@ -45,9 +46,9 @@ public class Channel extends AbstractTalkable
         }
     }
 
-    public ArrayList<String> getCurrentUsers()
+    public Iterable<String> getCurrentUsers()
     {
-        ArrayList<String> returnList = new ArrayList<>();
+        Collection<String> returnList = new ArrayList<>();
         for (ListedUser user : currentUsers)
         {
             returnList.add(user.toString());

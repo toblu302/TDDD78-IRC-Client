@@ -13,7 +13,6 @@ import java.net.UnknownHostException;
  */
 public class Connection
 {
-    private String server = null;
     private Socket socket = null;
 
     private BufferedWriter writer = null;
@@ -21,7 +20,6 @@ public class Connection
 
     public Connection(String server, int port)
     {
-        this.server = server;
         try
         {
             this.socket = new Socket(server, port);

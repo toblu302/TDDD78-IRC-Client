@@ -2,7 +2,6 @@ package se.liu.ida.toblu302.tddd78.client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * A JComponent which keeps a list of all the users in a channel.
@@ -10,30 +9,28 @@ import java.util.ArrayList;
  */
 public class ConnectedUsersComponent extends JPanel
 {
-    private JList list;
-    private DefaultListModel listModel;
-    private JScrollPane scrollPane;
+    private DefaultListModel<String> listModel;
 
     public ConnectedUsersComponent()
     {
         this.setLayout(new GridBagLayout());
 
-        listModel = new DefaultListModel();
-        list = new JList(listModel);
+        listModel = new DefaultListModel<>();
+        JList<String> list = new JList<>(listModel);
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 1;
-        c.weighty = 1;
+        GridBagConstraints gridConstraints = new GridBagConstraints();
+        gridConstraints.fill = GridBagConstraints.BOTH;
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.weightx = 1;
+        gridConstraints.weighty = 1;
         this.setLayout(new GridBagLayout());
 
-        scrollPane = new JScrollPane(list);
+        JScrollPane scrollPane = new JScrollPane(list);
 
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        this.add(scrollPane, c);
+        this.add(scrollPane, gridConstraints);
 
         this.addUser("poop");
         removeAllUsers();
@@ -60,6 +57,7 @@ public class ConnectedUsersComponent extends JPanel
         }
     }
 
+    //this is going to be used
     public void removeUser(String name)
     {
         int index = listModel.indexOf(name);

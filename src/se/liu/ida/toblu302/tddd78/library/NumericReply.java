@@ -17,7 +17,7 @@ public enum NumericReply
     /**
      * The server sends the user information upon a successful connection.
      */
-    RPL_MYINFO(004),
+    RPL_MYINFO(4),
 
     /**
      * Channel doesn't have a topic.

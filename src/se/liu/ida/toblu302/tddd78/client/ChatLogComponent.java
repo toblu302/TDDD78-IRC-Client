@@ -15,12 +15,12 @@ public class ChatLogComponent extends JPanel
 
     public ChatLogComponent()
     {
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 1;
-        c.weighty = 1;
+        GridBagConstraints gridConstraints = new GridBagConstraints();
+        gridConstraints.fill = GridBagConstraints.BOTH;
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.weightx = 1;
+        gridConstraints.weighty = 1;
 
         this.setLayout(new GridBagLayout());
         textArea.setLineWrap(true);
@@ -31,7 +31,7 @@ public class ChatLogComponent extends JPanel
 
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        this.add(scrollPane, c);
+        this.add(scrollPane, gridConstraints);
     }
 
     public void setText(String str)

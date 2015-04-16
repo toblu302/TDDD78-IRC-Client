@@ -33,51 +33,58 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private final static double USER_LIST_WEIGHT = 0.2;
     private final static double CHATLOG_WEIGHT = 0.8;
 
+    private String username;
+    private String realName;
+    private final static int DEFAULTPORT = 6667;
+
     public IRCFrame(String server, int port, String username, String realName) throws HeadlessException
     {
         super("IRC!");
+
+        this.username = username;
+        this.realName = realName;
 
         this.setJMenuBar(this.getIRCMenuBar());
         textInput.addListener(this);
 
         this.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        GridBagConstraints gridConstraints = new GridBagConstraints();
 
         channelSelect.setPreferredSize(new Dimension((int) (WIDTH * CHANNEL_LIST_WEIGHT), HEIGHT));
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = CHANNEL_LIST_WEIGHT;
-        c.weighty = 5;
-        c.gridwidth = 1;
-        this.add(channelSelect, c);
+        gridConstraints.fill = GridBagConstraints.BOTH;
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 0;
+        gridConstraints.weightx = CHANNEL_LIST_WEIGHT;
+        gridConstraints.weighty = 5;
+        gridConstraints.gridwidth = 1;
+        this.add(channelSelect, gridConstraints);
 
         chatLog.setPreferredSize(new Dimension((int) (WIDTH * CHATLOG_WEIGHT), HEIGHT));
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
-        c.gridy = 0;
-        c.weightx = CHATLOG_WEIGHT;
-        c.weighty = 5;
-        c.gridwidth = 1;
-        this.add(chatLog, c);
+        gridConstraints.fill = GridBagConstraints.BOTH;
+        gridConstraints.gridx = 1;
+        gridConstraints.gridy = 0;
+        gridConstraints.weightx = CHATLOG_WEIGHT;
+        gridConstraints.weighty = 5;
+        gridConstraints.gridwidth = 1;
+        this.add(chatLog, gridConstraints);
 
         connectedUsers.setPreferredSize(new Dimension((int) (WIDTH * USER_LIST_WEIGHT), HEIGHT));
-        c.fill = GridBagConstraints.BOTH;
-        c.gridx = 2;
-        c.gridy = 0;
-        c.weightx = USER_LIST_WEIGHT;
-        c.weighty = 5;
-        c.gridwidth = 1;
-        this.add(connectedUsers, c);
+        gridConstraints.fill = GridBagConstraints.BOTH;
+        gridConstraints.gridx = 2;
+        gridConstraints.gridy = 0;
+        gridConstraints.weightx = USER_LIST_WEIGHT;
+        gridConstraints.weighty = 5;
+        gridConstraints.gridwidth = 1;
+        this.add(connectedUsers, gridConstraints);
 
         textInput.setPreferredSize(new Dimension(WIDTH, CHATBOX_HEIGHT));
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 1;
-        c.weightx = 5;
-        c.weighty = 0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        this.add(textInput, c);
+        gridConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridConstraints.gridx = 0;
+        gridConstraints.gridy = 1;
+        gridConstraints.weightx = 5;
+        gridConstraints.weighty = 0;
+        gridConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        this.add(textInput, gridConstraints);
 
 
 	irc = new IRCConnection(server, port, username, realName);
@@ -146,6 +153,8 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
                 {
                     connectedUsers.addMultipleUsers(irc.getChannelUsers());
                 }
+                updateChatLog();
+                break;
 
             case NEWMESSAGE:
             case NEWQUERYMESSAGE:
@@ -171,12 +180,12 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
     private void joinServer()
     {
-        String serverAdress = JOptionPane.showInputDialog(null, "Join server (port 6667):");
+        String serverAdress = JOptionPane.showInputDialog(null, "Join server (port " + DEFAULTPORT + "): ");
         if (serverAdress != null)
         {
             channelSelect.removeAllChannels();
             irc.quitConnection();
-            irc = new IRCConnection(serverAdress, 6667, "tobleu", "Sodjwe  Dofigijrt");
+            irc = new IRCConnection(serverAdress, DEFAULTPORT, username, realName);
             irc.addListener(this);
         }
     }
@@ -187,7 +196,8 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         if (str.startsWith("/"))
         {
             commandHandler.executeCommand(str);
-        } else
+        }
+        else
         {
             irc.talk(str);
         }

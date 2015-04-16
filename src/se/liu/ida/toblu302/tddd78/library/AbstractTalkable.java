@@ -1,8 +1,5 @@
 package se.liu.ida.toblu302.tddd78.library;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Represents something (channel, user) which can be talked to on IRC.
  */
