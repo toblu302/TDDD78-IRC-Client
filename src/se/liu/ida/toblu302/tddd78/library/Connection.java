@@ -38,10 +38,14 @@ public class Connection
 
     public String read()
     {
-        String line = "";
+        String line = null;
         try
         {
-            line = reader.readLine();
+            if(reader.ready())
+            {
+                line = reader.readLine();
+            }
+
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -65,8 +69,8 @@ public class Connection
     {
         try
         {
-            socket.shutdownInput();
             socket.shutdownOutput();
+            socket.shutdownInput();
             writer.close();
             reader.close();
             socket.close();

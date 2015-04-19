@@ -9,6 +9,8 @@ import java.awt.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * A JFrame which contains and manages everything needed to connect to (and use) an IRC server.
@@ -87,10 +89,22 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         this.add(textInput, gridConstraints);
 
 
-	irc = new IRCConnection(server, port, username, realName);
+	    irc = new IRCConnection(server, port, username, realName);
         irc.addListener(this);
 
         commandHandler = new CommandExecuter(irc);
+
+        addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                super.windowClosing(e);
+                irc.quitConnection();
+                System.exit(0);
+            }
+        });
+
 
         this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
         this.pack();
@@ -120,6 +134,8 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         return menubar;
     }
 
+
+
     private void quit()
     {
         int optionChosen = JOptionPane.showOptionDialog(null, "Do you want to quit?",
@@ -145,6 +161,9 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         switch (e.getEventType())
         {
             case USERQUIT:
+                connectedUsers.removeUser( e.getArgument() );
+                break;
+
             case NEWUSER:
             case CHANGEDNAME:
             case CHANGEDCHANNEL:
@@ -154,6 +173,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
                     connectedUsers.addMultipleUsers(irc.getChannelUsers());
                 }
                 updateChatLog();
+                this.setTitle( irc.getChannelTopic() );
                 break;
 
             case NEWMESSAGE:

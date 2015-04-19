@@ -30,4 +30,23 @@ public class ListedUser
     {
         return (this.mode + this.userName);
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ListedUser that = (ListedUser) o;
+
+        if (userName != null ? !userName.equals(that.userName) : that.userName != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return userName != null ? userName.hashCode() : 0;
+    }
 }

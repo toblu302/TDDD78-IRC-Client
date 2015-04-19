@@ -9,10 +9,10 @@ import java.awt.*;
 
 public class ServerSelectFrame extends JFrame
 {
-    private JTextField server = new JTextField();
-    private JTextField port = new JTextField();
-    private JTextField username = new JTextField();
-    private JTextField realName = new JTextField();
+    private JTextField server = new JTextField("irc.rizon.net");
+    private JTextField port = new JTextField("6667");
+    private JTextField username = new JTextField("tobleu");
+    private JTextField realName = new JTextField("Sod Jed");
 
     final static int WIDTH = 240;
     final static int HEIGHT = 160;

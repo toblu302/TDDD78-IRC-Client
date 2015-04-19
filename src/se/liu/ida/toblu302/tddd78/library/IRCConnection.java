@@ -22,6 +22,7 @@ public class IRCConnection
     private Talkable selectedTalkable = null;
 
     private Thread loggingThread = null;
+    private boolean isLogging = false;
 
     private IRCLog log = new IRCLog();
 
@@ -155,9 +156,26 @@ public class IRCConnection
         return null;
     }
 
+    public String getChannelTopic()
+    {
+        if (selectedTalkable == null)
+        {
+            return null;
+        }
+        if( channels.contains(selectedTalkable) )
+        {
+            Channel channel = (Channel)selectedTalkable;
+            return channel.getTopic();
+        }
+
+        return null;
+    }
+
     public void quitConnection()
     {
+        isLogging = false;
         loggingThread.interrupt();
+
         connection.write("QUIT");
         connection.close();
     }
@@ -181,7 +199,14 @@ public class IRCConnection
 
             case USERJOINED:
                 channel = getChannelFromName(userMessage);
-                channel.addUser(user, ' ');
+
+                // We're going to be properly added (with the right mode) from a RPL_NAMEREPLY,
+                // so ignore our own username if it shows up here
+                if(!user.equals(this.userName))
+                {
+                    channel.addUser(user, ' ');
+                }
+
                 notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
                 break;
 
@@ -190,7 +215,7 @@ public class IRCConnection
                 {
                     chan.removeUser(user);
                 }
-                notifyListeners(new IRCEvent(IRCEventType.USERQUIT));
+                notifyListeners(new IRCEvent(IRCEventType.USERQUIT, user));
                 break;
 
             case PRIVATEMESSAGE:
@@ -236,6 +261,12 @@ public class IRCConnection
 
     private void handleNumeric(int numericCode, String message)
     {
+        Channel channel;
+
+        String user = Message.getUserString(message);
+        String channelName = Message.getChannelString(message);
+        String userMessage = Message.getMessageString(message);
+
         switch (NumericReply.getNumericReply(numericCode))
         {
             case RPL_MYINFO:
@@ -243,11 +274,13 @@ public class IRCConnection
                 break;
 
             case RPL_NOTOPIC:
-                //channel doesn't have a topic
+                channel = this.getChannelFromName(channelName);
+                channel.setTopic(null);
                 break;
 
             case RPL_TOPIC:
-                //channel got a topic
+                channel = this.getChannelFromName(channelName);
+                channel.setTopic(userMessage);
                 break;
 
             case ERR_NOSUCHCHANNEL:
@@ -255,11 +288,12 @@ public class IRCConnection
                 break;
 
             case ERR_NICKNAMEINUSE:
-                //invalid nickname
+                //add a _ to the end of our userName if it is already taken
+                this.userName += "_";
+                this.changeNick(this.userName);
                 break;
 
             case RPL_NAMREPLY:
-                String channelName = Message.getChannelString(message);
                 Channel t = this.getChannelFromName(channelName);
 
                 int start = message.indexOf(channelName);
@@ -325,7 +359,11 @@ public class IRCConnection
 
     private String read()
     {
-        return connection.read();
+        if(isLogging)
+        {
+            return connection.read();
+        }
+        return null;
     }
 
     private void startLogging()
@@ -347,6 +385,7 @@ public class IRCConnection
         }
         loggingThread = new Thread(new IRCThread());
         loggingThread.start();
+        isLogging = true;
     }
 
     public void addListener(IRCListener ircl)

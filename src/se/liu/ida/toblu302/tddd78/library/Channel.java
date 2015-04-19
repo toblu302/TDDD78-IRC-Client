@@ -2,23 +2,35 @@ package se.liu.ida.toblu302.tddd78.library;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Represents an IRC channel
  */
 public class Channel extends AbstractTalkable
 {
-    private Collection<ListedUser> currentUsers = new ArrayList<>();
+    private Set<ListedUser> currentUsers = new HashSet<>();
+    private String topic;
 
     public Channel(final String name, Connection connection)
     {
         super(name, connection);
     }
 
+    public String getTopic()
+    {
+        return topic;
+    }
+
+    public void setTopic(String topic)
+    {
+        this.topic = topic;
+    }
+
     public void addUser(String name, char mode)
     {
-        currentUsers.add(new ListedUser(name, mode));
+        currentUsers.add( new ListedUser(name, mode) );
     }
 
     public void changeUserName(String oldName, String newName)
