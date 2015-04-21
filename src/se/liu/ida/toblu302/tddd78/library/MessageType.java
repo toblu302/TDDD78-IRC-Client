@@ -11,24 +11,29 @@ public enum MessageType
     CHANNELMESSAGE,
 
     /**
-     * Someone joined a channel.
+     * New private message.
      */
-    USERJOINED,
+    PRIVATEMESSAGE,
 
     /**
-     * Someone quit a channel.
+     * Someone joined a channel.
+     */
+    JOIN,
+
+    /**
+     * Someone exits the IRC server.
      */
     QUIT,
 
     /**
-     * Someone changed their name.
+     * Someone left the channel.
      */
-    NAMECHANGE,
+    PART,
 
     /**
-     * New private message.
+     * Someone changed their name.
      */
-    PRIVATEMESSAGE,
+    NICK,
 
     /**
      * IRC-server pinged you (to check if you're still there).

@@ -52,6 +52,7 @@ public class Channel extends AbstractTalkable
         {
             if (user.getUserName().equals(name))
             {
+                addLog("", name + " has left the channel.");
                 currentUsers.remove(user);
                 break;
             }

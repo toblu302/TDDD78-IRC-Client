@@ -11,6 +11,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.UnknownHostException;
 
 /**
  * A JFrame which contains and manages everything needed to connect to (and use) an IRC server.
@@ -39,7 +40,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private String realName;
     private final static int DEFAULTPORT = 6667;
 
-    public IRCFrame(String server, int port, String username, String realName) throws HeadlessException
+    public IRCFrame(String server, int port, String username, String realName) throws HeadlessException, UnknownHostException
     {
         super("IRC!");
 
@@ -89,7 +90,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         this.add(textInput, gridConstraints);
 
 
-	    irc = new IRCConnection(server, port, username, realName);
+        irc = new IRCConnection(server, port, username, realName);
         irc.addListener(this);
 
         commandHandler = new CommandExecuter(irc);
@@ -173,7 +174,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
                     connectedUsers.addMultipleUsers(irc.getChannelUsers());
                 }
                 updateChatLog();
-                this.setTitle( irc.getChannelTopic() );
+                this.setTitle(irc.getChannelTopic());
                 break;
 
             case NEWMESSAGE:
@@ -201,12 +202,17 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private void joinServer()
     {
         String serverAdress = JOptionPane.showInputDialog(null, "Join server (port " + DEFAULTPORT + "): ");
-        if (serverAdress != null)
+        try
         {
+            IRCConnection newConnection = new IRCConnection(serverAdress, DEFAULTPORT, username, realName);
             channelSelect.removeAllChannels();
             irc.quitConnection();
-            irc = new IRCConnection(serverAdress, DEFAULTPORT, username, realName);
-            irc.addListener(this);
+            newConnection.addListener(this);
+            irc = newConnection;
+        }
+        catch(UnknownHostException e)
+        {
+            JOptionPane.showMessageDialog(null, "Invalid server, try again.");
         }
     }
 

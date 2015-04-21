@@ -18,7 +18,7 @@ public class Connection
     private BufferedWriter writer = null;
     private BufferedReader reader = null;
 
-    public Connection(String server, int port)
+    public Connection(String server, int port) throws UnknownHostException
     {
         try
         {
@@ -26,11 +26,13 @@ public class Connection
 
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (UnknownHostException e)
+        }
+        catch (UnknownHostException e)
         {
-            e.printStackTrace();
-            System.out.println("Unknown server.");
-        } catch (IOException e)
+            throw e;
+        }
+
+        catch (IOException e)
         {
             e.printStackTrace();
         }

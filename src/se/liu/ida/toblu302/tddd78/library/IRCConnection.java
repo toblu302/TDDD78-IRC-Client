@@ -1,5 +1,6 @@
 package se.liu.ida.toblu302.tddd78.library;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -27,7 +28,7 @@ public class IRCConnection
     private IRCLog log = new IRCLog();
 
 
-    public IRCConnection(final String server, int port, String userName, String realName)
+    public IRCConnection(final String server, int port, String userName, String realName) throws UnknownHostException
     {
         this.userName = userName;
 
@@ -41,7 +42,7 @@ public class IRCConnection
 
     public void changeNick(String newNick)
     {
-        //the "userName" variable doesn't get updated here, because the new NICK might not be accepted by the server
+        //the "userName" field doesn't get updated here, because the new NICK might not be accepted by the server
         connection.write("NICK " + newNick + "\r\n");
     }
 
@@ -54,9 +55,6 @@ public class IRCConnection
 
         Channel channel = new Channel(channelName, this.connection);
         channel.join();
-        channels.add(channel);
-
-        notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, channelName));
     }
 
     private boolean inQuery(String userName)
@@ -195,27 +193,7 @@ public class IRCConnection
             case CHANNELMESSAGE:
                 channel = getChannelFromName(channelName);
                 channel.addLog(user, userMessage);
-                break;
-
-            case USERJOINED:
-                channel = getChannelFromName(userMessage);
-
-                // We're going to be properly added (with the right mode) from a RPL_NAMEREPLY,
-                // so ignore our own username if it shows up here
-                if(!user.equals(this.userName))
-                {
-                    channel.addUser(user, ' ');
-                }
-
-                notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
-                break;
-
-            case QUIT:
-                for (Channel chan : channels)
-                {
-                    chan.removeUser(user);
-                }
-                notifyListeners(new IRCEvent(IRCEventType.USERQUIT, user));
+                notifyListeners(new IRCEvent(IRCEventType.NEWMESSAGE));
                 break;
 
             case PRIVATEMESSAGE:
@@ -224,12 +202,45 @@ public class IRCConnection
                     joinQuery(user);
                 }
                 Query q = getQueryFromName(user);
-                q.addLog(user, userMessage);
+                if(q != null)
+                {
+                    q.addLog(user, userMessage);
+                }
                 notifyListeners(new IRCEvent(IRCEventType.NEWQUERYMESSAGE));
                 break;
 
-            case NAMECHANGE:
+            case JOIN:
+                channel = getChannelFromName(userMessage);
 
+                // We're going to be properly added (with the right mode) from a RPL_NAMEREPLY,
+                // so ignore our own username if it shows up here
+                if(!user.equals(this.userName))
+                {
+                    channel.addUser(user, ' ');
+                }
+                else
+                {
+                    // A JOIN with our own username is sent as confirmation that we've joined
+                    // so we add the channel to the channel-collection here.
+                    channels.add( new Channel(channelName, connection));
+
+                    notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, channelName));
+                }
+
+                notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
+                break;
+
+            case PART:
+            case QUIT:
+                for (Channel chan : channels)
+                {
+                    chan.removeUser(user);
+                }
+                notifyListeners(new IRCEvent(IRCEventType.USERQUIT, user));
+                break;
+
+
+            case NICK:
                 if (user.equals(this.userName))
                 {
                     this.userName = userMessage;
@@ -241,6 +252,7 @@ public class IRCConnection
                 }
                 notifyListeners(new IRCEvent(IRCEventType.CHANGEDNAME));
                 break;
+
 
             case PING:
                 connection.write("PONG");

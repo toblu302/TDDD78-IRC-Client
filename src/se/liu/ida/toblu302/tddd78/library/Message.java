@@ -87,22 +87,34 @@ public final class Message
         if (message.contains("PRIVMSG #"))
         {
             return MessageType.CHANNELMESSAGE;
-        } else if (message.contains("PRIVMSG "))
+        }
+
+        else if (message.contains("PRIVMSG "))
         {
             return MessageType.PRIVATEMESSAGE;
-        } else if (message.contains(" NICK :"))
+        }
+
+        else if (message.contains(" NICK :"))
         {
-            return MessageType.NAMECHANGE;
-        } else if (message.contains(" JOIN :"))
+            return MessageType.NICK;
+        }
+
+        else if (message.contains(" JOIN :"))
         {
-            return MessageType.USERJOINED;
-        } else if (message.contains(" PART #"))
+            return MessageType.JOIN;
+        }
+
+        else if (message.contains(" PART #"))
         {
             return MessageType.QUIT;
-        } else if (message.startsWith("PING :irc."))
+        }
+
+        else if (message.startsWith("PING :irc."))
         {
             return MessageType.PING;
-        } else
+        }
+
+        else
         {
             String[] parts = message.split(" ");
             if (parts.length > 1 && parts[1].length() == 3)

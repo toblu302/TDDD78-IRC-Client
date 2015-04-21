@@ -2,6 +2,7 @@ package se.liu.ida.toblu302.tddd78.client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.UnknownHostException;
 
 /**
  * A JFrame for an IRC user to enter a server, portnumer, username, and a real name.
@@ -47,9 +48,25 @@ public class ServerSelectFrame extends JFrame
 
     private void onConnect()
     {
-        int portNumber = Integer.parseInt(port.getText());
-        //No need to use the window after it has been created.
-        IRCFrame ircWindow = new IRCFrame(server.getText(), portNumber, username.getText(), realName.getText());
+        int portNumber = 6667;
+        try
+        {
+            portNumber = Integer.parseInt(port.getText());
+        }
+        catch( NumberFormatException e )
+        {
+            JOptionPane.showMessageDialog(null, "Invalid port number.");
+        }
+
+        try
+        {
+            //No need to use the window after it has been created.
+            IRCFrame ircWindow = new IRCFrame(server.getText(), portNumber, username.getText(), realName.getText());
+        }
+        catch(UnknownHostException e)
+        {
+            JOptionPane.showMessageDialog(null, "Invalid server, try again.");
+        }
         this.dispose();
     }
 
