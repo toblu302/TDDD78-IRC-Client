@@ -11,7 +11,7 @@ import java.util.HashSet;
 public class Channel extends AbstractTalkable
 {
     private Set<ListedUser> currentUsers = new HashSet<>();
-    private String topic;
+    private String topic = null;
 
     public Channel(final String name, Connection connection)
     {

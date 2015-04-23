@@ -1,4 +1,4 @@
-package se.liu.ida.toblu302.tddd78.client;
+package se.liu.ida.toblu302.tddd78.client.command;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,7 +6,7 @@ import java.util.Collection;
 /**
  * This class creates and stores the various different Commands which a user can enter.
  *
- * @see Command
+ * @see se.liu.ida.toblu302.tddd78.client.command.Command
  */
 public class CommandMaker
 {

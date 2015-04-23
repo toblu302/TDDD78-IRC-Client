@@ -1,4 +1,4 @@
-package se.liu.ida.toblu302.tddd78.client;
+package se.liu.ida.toblu302.tddd78.client.components;
 
 import javax.swing.*;
 import java.awt.*;

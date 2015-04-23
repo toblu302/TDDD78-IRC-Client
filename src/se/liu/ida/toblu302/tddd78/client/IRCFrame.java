@@ -1,5 +1,10 @@
 package se.liu.ida.toblu302.tddd78.client;
 
+import se.liu.ida.toblu302.tddd78.client.command.CommandExecuter;
+import se.liu.ida.toblu302.tddd78.client.components.ChannelSelectComponent;
+import se.liu.ida.toblu302.tddd78.client.components.ChatLogComponent;
+import se.liu.ida.toblu302.tddd78.client.components.ConnectedUsersComponent;
+import se.liu.ida.toblu302.tddd78.client.components.InputComponent;
 import se.liu.ida.toblu302.tddd78.library.IRCEvent;
 import se.liu.ida.toblu302.tddd78.library.IRCListener;
 import se.liu.ida.toblu302.tddd78.library.IRCConnection;
@@ -204,6 +209,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         String serverAdress = JOptionPane.showInputDialog(null, "Join server (port " + DEFAULTPORT + "): ");
         try
         {
+            //bug here, can't use the new connection to talk to a channel/user
             IRCConnection newConnection = new IRCConnection(serverAdress, DEFAULTPORT, username, realName);
             channelSelect.removeAllChannels();
             irc.quitConnection();

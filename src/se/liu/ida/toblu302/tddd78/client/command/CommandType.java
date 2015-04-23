@@ -1,9 +1,9 @@
-package se.liu.ida.toblu302.tddd78.client;
+package se.liu.ida.toblu302.tddd78.client.command;
 
 /**
  * This represents the various different types commands a user can enter.
  *
- * @see Command
+ * @see se.liu.ida.toblu302.tddd78.client.command.Command
  */
 public enum CommandType
 {

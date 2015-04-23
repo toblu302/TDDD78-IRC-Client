@@ -1,4 +1,6 @@
-package se.liu.ida.toblu302.tddd78.client;
+package se.liu.ida.toblu302.tddd78.client.components;
+
+import se.liu.ida.toblu302.tddd78.client.InputListener;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +11,7 @@ import java.util.Collection;
 /**
  * Lets the user enter some input, which is then sent to the InputListeners in listeners.
  *
- * @see InputListener
+ * @see se.liu.ida.toblu302.tddd78.client.InputListener
  */
 public class InputComponent extends JTextField
 {

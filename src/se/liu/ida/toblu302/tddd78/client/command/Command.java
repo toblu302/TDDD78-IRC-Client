@@ -1,4 +1,4 @@
-package se.liu.ida.toblu302.tddd78.client;
+package se.liu.ida.toblu302.tddd78.client.command;
 
 /**
  * Represents a command which can be typed into the IRC client.

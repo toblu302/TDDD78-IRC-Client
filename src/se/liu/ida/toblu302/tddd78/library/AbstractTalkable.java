@@ -3,13 +3,13 @@ package se.liu.ida.toblu302.tddd78.library;
 /**
  * Represents something (channel, user) which can be talked to on IRC.
  */
-public class AbstractTalkable implements Talkable
+public abstract class AbstractTalkable implements Talkable
 {
     protected String name;
     protected Connection connection;
     protected IRCLog log = new IRCLog();
 
-    public AbstractTalkable(final String name, Connection connection)
+    protected AbstractTalkable(final String name, Connection connection)
     {
         this.connection = connection;
         this.name = name;
