@@ -218,6 +218,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         }
         catch(UnknownHostException e)
         {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Invalid server, try again.");
         }
     }

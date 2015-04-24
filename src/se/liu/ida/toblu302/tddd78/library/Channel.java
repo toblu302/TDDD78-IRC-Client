@@ -2,7 +2,6 @@ package se.liu.ida.toblu302.tddd78.library;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 import java.util.HashSet;
 
 /**
@@ -10,7 +9,7 @@ import java.util.HashSet;
  */
 public class Channel extends AbstractTalkable
 {
-    private Set<ListedUser> currentUsers = new HashSet<>();
+    private Collection<ListedUser> currentUsers = new HashSet<>();
     private String topic = null;
 
     public Channel(final String name, Connection connection)

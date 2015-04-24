@@ -27,6 +27,8 @@ public class IRCConnection
 
     private IRCLog log = new IRCLog();
 
+    private final Object threadMonitor = new Object();
+
 
     public IRCConnection(final String server, int port, String userName, String realName) throws UnknownHostException
     {
@@ -171,11 +173,15 @@ public class IRCConnection
 
     public void quitConnection()
     {
+
         isLogging = false;
         loggingThread.interrupt();
-
         connection.write("QUIT");
-        connection.close();
+
+        synchronized(threadMonitor)
+        {
+            connection.close();
+        }
     }
 
     private void handleMessage(String message)
@@ -210,27 +216,15 @@ public class IRCConnection
                 break;
 
             case JOIN:
-                channel = getChannelFromName(userMessage);
-
-                // We're going to be properly added (with the right mode) from a RPL_NAMEREPLY,
-                // so ignore our own username if it shows up here
-                if(!user.equals(this.userName))
-                {
-                    channel.addUser(user, ' ');
-                }
-                else
-                {
-                    // A JOIN with our own username is sent as confirmation that we've joined
-                    // so we add the channel to the channel-collection here.
-                    channels.add( new Channel(channelName, connection));
-
-                    notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, channelName));
-                }
-
-                notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
+                handleJOIN(user, channelName, userMessage);
                 break;
 
             case PART:
+                channel = getChannelFromName(channelName);
+                channel.removeUser(user);
+                notifyListeners(new IRCEvent(IRCEventType.USERQUIT, user));
+                break;
+
             case QUIT:
                 for (Channel chan : channels)
                 {
@@ -239,20 +233,9 @@ public class IRCConnection
                 notifyListeners(new IRCEvent(IRCEventType.USERQUIT, user));
                 break;
 
-
             case NICK:
-                if (user.equals(this.userName))
-                {
-                    this.userName = userMessage;
-                }
-
-                for (Channel chan : channels)
-                {
-                    chan.changeUserName(user, userMessage);
-                }
-                notifyListeners(new IRCEvent(IRCEventType.CHANGEDNAME));
+                handleNICK(user, userMessage);
                 break;
-
 
             case PING:
                 connection.write("PONG");
@@ -269,6 +252,46 @@ public class IRCConnection
                 break;
         }
         notifyListeners(new IRCEvent(IRCEventType.NEWMESSAGE));
+    }
+
+    private void handleNICK(String user, String userMessage)
+    {
+        if (user.equals(this.userName))
+        {
+            this.userName = userMessage;
+        }
+
+        for (Channel chan : channels)
+        {
+            chan.changeUserName(user, userMessage);
+        }
+
+        notifyListeners(new IRCEvent(IRCEventType.CHANGEDNAME));
+        return;
+    }
+
+    private void handleJOIN(String user, String channelName, String userMessage)
+    {
+        Channel channel = getChannelFromName(userMessage);
+        assert channel != null;
+
+        // We're going to be properly added (with the right mode) from a RPL_NAMEREPLY,
+        // so ignore our own username if it shows up here
+        if(!user.equals(this.userName))
+        {
+            channel.addUser(user, ' ');
+        }
+        else
+        {
+            // A JOIN with our own username is sent as confirmation that we've joined
+            // so we add the channel to the channel-collection here.
+            channels.add( new Channel(channelName, connection));
+
+            notifyListeners(new IRCEvent(IRCEventType.JOINEDCHANNEL, channelName));
+        }
+
+        notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
+        return;
     }
 
     private void handleNumeric(int numericCode, String message)
@@ -371,11 +394,7 @@ public class IRCConnection
 
     private String read()
     {
-        if(isLogging)
-        {
-            return connection.read();
-        }
-        return null;
+        return connection.read();
     }
 
     private void startLogging()
@@ -386,7 +405,14 @@ public class IRCConnection
             {
                 while (!Thread.interrupted())
                 {
-                    String line = read();
+                    String line = null;
+                    if(isLogging)
+                    {
+                        synchronized(threadMonitor)
+                        {
+                            line = read();
+                        }
+                    }
 
                     if (line != null)
                     {
@@ -395,6 +421,7 @@ public class IRCConnection
                 }
             }
         }
+
         loggingThread = new Thread(new IRCThread());
         loggingThread.start();
         isLogging = true;

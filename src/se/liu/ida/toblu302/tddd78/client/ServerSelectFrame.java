@@ -48,14 +48,16 @@ public class ServerSelectFrame extends JFrame
 
     private void onConnect()
     {
-        int portNumber = 6667;
+        int portNumber;
         try
         {
             portNumber = Integer.parseInt(port.getText());
         }
         catch( NumberFormatException e )
         {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Invalid port number.");
+            return;
         }
 
         try
@@ -65,7 +67,9 @@ public class ServerSelectFrame extends JFrame
         }
         catch(UnknownHostException e)
         {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Invalid server, try again.");
+            return;
         }
         this.dispose();
     }

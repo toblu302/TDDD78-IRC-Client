@@ -61,7 +61,8 @@ public class Connection
         {
             writer.write(message);
             writer.flush();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -76,7 +77,8 @@ public class Connection
             writer.close();
             reader.close();
             socket.close();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
