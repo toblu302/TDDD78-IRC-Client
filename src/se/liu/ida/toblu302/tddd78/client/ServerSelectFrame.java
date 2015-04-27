@@ -2,7 +2,10 @@ package se.liu.ida.toblu302.tddd78.client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.net.UnknownHostException;
+
+
 
 /**
  * A JFrame for an IRC user to enter a server, portnumer, username, and a real name.
@@ -10,10 +13,10 @@ import java.net.UnknownHostException;
 
 public class ServerSelectFrame extends JFrame
 {
-    private JTextField server = new JTextField("irc.rizon.net");
-    private JTextField port = new JTextField("6667");
-    private JTextField username = new JTextField("tobleu");
-    private JTextField realName = new JTextField("Sod Jed");
+    private JTextField server = new JTextField();
+    private JTextField port = new JTextField();
+    private JTextField username = new JTextField();
+    private JTextField realName = new JTextField();
 
     final static int WIDTH = 240;
     final static int HEIGHT = 160;
@@ -28,6 +31,9 @@ public class ServerSelectFrame extends JFrame
         JButton connect = new JButton("Connect!");
         connect.addActionListener(e -> this.onConnect());
 
+        JButton save = new JButton("Save!");
+        save.addActionListener(e -> this.onSave());
+
         this.add(new JLabel("Server: "));
         this.add(server);
 
@@ -41,17 +47,22 @@ public class ServerSelectFrame extends JFrame
         this.add(username);
 
         this.add(connect);
+        this.add(save);
 
         this.pack();
         this.setVisible(true);
+
+        this.loadSettings();
     }
 
     private void onConnect()
     {
-        int portNumber;
         try
         {
-            portNumber = Integer.parseInt(port.getText());
+            int portNumber = Integer.parseInt(port.getText());
+
+            //No need to use the window after it has been created.
+            IRCFrame ircWindow = new IRCFrame(server.getText(), portNumber, username.getText(), realName.getText());
         }
         catch( NumberFormatException e )
         {
@@ -59,19 +70,30 @@ public class ServerSelectFrame extends JFrame
             JOptionPane.showMessageDialog(null, "Invalid port number.");
             return;
         }
-
-        try
-        {
-            //No need to use the window after it has been created.
-            IRCFrame ircWindow = new IRCFrame(server.getText(), portNumber, username.getText(), realName.getText());
-        }
         catch(UnknownHostException e)
         {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Invalid server, try again.");
             return;
         }
+
         this.dispose();
+    }
+
+    private void onSave()
+    {
+        SettingsManager.getInstance().setServer( server.getText() );
+        SettingsManager.getInstance().setPort( port.getText() );
+        SettingsManager.getInstance().setRealname( realName.getText() );
+        SettingsManager.getInstance().setUsername( username.getText() );
+    }
+
+    private void loadSettings()
+    {
+        this.server.setText( SettingsManager.getInstance().getServer() );
+        this.port.setText( SettingsManager.getInstance().getPort() );
+        this.realName.setText(SettingsManager.getInstance().getRealname());
+        this.username.setText( SettingsManager.getInstance().getUsername() );
     }
 
     public static void main(String[] args)
