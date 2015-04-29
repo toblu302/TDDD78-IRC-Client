@@ -123,15 +123,12 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
         JMenuItem quit = new JMenuItem("Quit", 'Q');
         JMenuItem newChannel = new JMenuItem("Join Channel", 'C');
-        JMenuItem newServer = new JMenuItem("Join Server", 'S');
 
         quit.addActionListener(e -> quit());
         newChannel.addActionListener(e -> joinChannel());
-        newServer.addActionListener(e -> joinServer());
 
         file.add(quit);
         file.add(newChannel);
-        file.add(newServer);
 
 
         final JMenuBar menubar = new JMenuBar();
@@ -205,25 +202,6 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
             default:
                 break;
-        }
-    }
-
-    private void joinServer()
-    {
-        String serverAdress = JOptionPane.showInputDialog(null, "Join server (port " + DEFAULTPORT + "): ");
-        try
-        {
-            //bug here, can't use the new connection to talk to a channel/user
-            IRCConnection newConnection = new IRCConnection(serverAdress, DEFAULTPORT, username, realName);
-            channelSelect.removeAllChannels();
-            irc.quitConnection();
-            newConnection.addListener(this);
-            irc = newConnection;
-        }
-        catch(UnknownHostException e)
-        {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Invalid server, try again.");
         }
     }
 
