@@ -104,7 +104,17 @@ public final class Message
             return MessageType.JOIN;
         }
 
+        else if (message.contains(" TOPIC #"))
+        {
+            return MessageType.TOPIC;
+        }
+
         else if (message.contains(" PART #"))
+        {
+            return MessageType.PART;
+        }
+
+        else if (message.contains(" QUIT "))
         {
             return MessageType.QUIT;
         }

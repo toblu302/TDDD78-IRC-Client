@@ -25,6 +25,7 @@ public class Channel extends AbstractTalkable
     public void setTopic(String topic)
     {
         this.topic = topic;
+        addLog("", "New topic: " + topic);
     }
 
     public void addUser(String name, char mode)
@@ -51,7 +52,6 @@ public class Channel extends AbstractTalkable
         {
             if (user.getUserName().equals(name))
             {
-                addLog("", name + " has left the channel.");
                 currentUsers.remove(user);
                 break;
             }

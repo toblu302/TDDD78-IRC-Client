@@ -57,7 +57,6 @@ public class ConnectedUsersComponent extends JPanel
         }
     }
 
-    //this is going to be used
     public void removeUser(String name)
     {
         int index = listModel.indexOf(name);

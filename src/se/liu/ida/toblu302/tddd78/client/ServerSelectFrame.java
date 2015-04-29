@@ -2,10 +2,7 @@ package se.liu.ida.toblu302.tddd78.client;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.net.UnknownHostException;
-
-
 
 /**
  * A JFrame for an IRC user to enter a server, portnumer, username, and a real name.

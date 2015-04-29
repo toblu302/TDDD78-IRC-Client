@@ -21,6 +21,11 @@ public enum MessageType
     JOIN,
 
     /**
+     * The topic of a channel was updated.
+     */
+    TOPIC,
+
+    /**
      * Someone exits the IRC server.
      */
     QUIT,

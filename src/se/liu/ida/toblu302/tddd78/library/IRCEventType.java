@@ -41,6 +41,11 @@ public enum IRCEventType
     NEWQUERY,
 
     /**
+     * The topic of a channel was updated.
+     */
+    NEWTOPIC,
+
+    /**
      * A new private message.
      */
     NEWQUERYMESSAGE,

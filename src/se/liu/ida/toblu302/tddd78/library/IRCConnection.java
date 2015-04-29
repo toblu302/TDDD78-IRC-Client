@@ -14,7 +14,7 @@ public class IRCConnection
 
     private boolean successfullyConnected = false;
 
-    private Connection connection;
+    private final Connection connection;
     private String userName;
 
     private Collection<Channel> channels = new ArrayList<>();
@@ -203,26 +203,26 @@ public class IRCConnection
                 break;
 
             case PRIVATEMESSAGE:
-                if (!inQuery(user))
-                {
-                    joinQuery(user);
-                }
-                Query q = getQueryFromName(user);
-                if(q != null)
-                {
-                    q.addLog(user, userMessage);
-                }
-                notifyListeners(new IRCEvent(IRCEventType.NEWQUERYMESSAGE));
+                handlePM(user, userMessage);
                 break;
 
             case JOIN:
                 handleJOIN(user, channelName, userMessage);
                 break;
 
+            case TOPIC:
+                channel = getChannelFromName(channelName);
+                channel.setTopic(userMessage);
+                notifyListeners(new IRCEvent(IRCEventType.NEWTOPIC));
+                break;
+
             case PART:
                 channel = getChannelFromName(channelName);
-                channel.removeUser(user);
-                notifyListeners(new IRCEvent(IRCEventType.USERQUIT, user));
+                if(channel != null)
+                {
+                    channel.removeUser(user);
+                    notifyListeners(new IRCEvent(IRCEventType.USERQUIT, user));
+                }
                 break;
 
             case QUIT:
@@ -238,7 +238,7 @@ public class IRCConnection
                 break;
 
             case PING:
-                connection.write("PONG");
+                connection.write("PONG " + userMessage + "\r\n");
                 break;
 
             case NUMERIC:
@@ -254,6 +254,20 @@ public class IRCConnection
         notifyListeners(new IRCEvent(IRCEventType.NEWMESSAGE));
     }
 
+    private void handlePM(String user, String userMessage)
+    {
+        if (!inQuery(user))
+        {
+            joinQuery(user);
+        }
+        Query q = getQueryFromName(user);
+        if(q != null)
+        {
+            q.addLog(user, userMessage);
+        }
+        notifyListeners(new IRCEvent(IRCEventType.NEWQUERYMESSAGE));
+    }
+
     private void handleNICK(String user, String userMessage)
     {
         if (user.equals(this.userName))
@@ -267,7 +281,6 @@ public class IRCConnection
         }
 
         notifyListeners(new IRCEvent(IRCEventType.CHANGEDNAME));
-        return;
     }
 
     private void handleJOIN(String user, String channelName, String userMessage)
@@ -291,7 +304,6 @@ public class IRCConnection
         }
 
         notifyListeners(new IRCEvent(IRCEventType.NEWUSER));
-        return;
     }
 
     private void handleNumeric(int numericCode, String message)
@@ -316,6 +328,7 @@ public class IRCConnection
             case RPL_TOPIC:
                 channel = this.getChannelFromName(channelName);
                 channel.setTopic(userMessage);
+                notifyListeners(new IRCEvent(IRCEventType.NEWTOPIC));
                 break;
 
             case ERR_NOSUCHCHANNEL:

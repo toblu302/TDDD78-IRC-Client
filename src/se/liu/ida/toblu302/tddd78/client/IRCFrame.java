@@ -187,6 +187,10 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
                 updateChatLog();
                 break;
 
+            case NEWTOPIC:
+                this.setTitle( irc.getChannelTopic() );
+                break;
+
             case JOINEDCHANNEL:
                 channelSelect.newChannel(e.getArgument());
                 break;

@@ -2,35 +2,33 @@ package se.liu.ida.toblu302.tddd78.client;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Manages (stores/loads) settings.
  */
-public class SettingsManager
+public final class SettingsManager
 {
     private final static String FILENAME = "settings.xml";
 
     private Element settingsNode = null;
     private Document settingsDocument = null;
     private File settingsFile = null;
-    private static SettingsManager ourInstance = new SettingsManager();
+    private static SettingsManager instance = new SettingsManager();
 
     public static SettingsManager getInstance()
     {
-        return ourInstance;
+        return instance;
     }
 
     private SettingsManager()
@@ -60,22 +58,26 @@ public class SettingsManager
             return null;
         }
 
-        Element firstSettingElement = (Element) settingList.item(0);
+        Node firstSettingElement = (Element) settingList.item(0);
         return firstSettingElement.getTextContent().trim();
     }
 
     private void saveSettingByName(String setting, String newValue)
     {
         NodeList settingList = settingsNode.getElementsByTagName(setting);
-        Element firstSettingElement = (Element) settingList.item(0);
+        if(settingList.getLength() == 0)
+        {
+            return;
+        }
+        Node firstSettingElement = (Element) settingList.item(0);
         firstSettingElement.setTextContent(newValue);
 
         try
         {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(this.settingsDocument);
-            StreamResult streamResult = new StreamResult(settingsFile);
+            Source source = new DOMSource(this.settingsDocument);
+            Result streamResult = new StreamResult(settingsFile);
             transformer.transform(source, streamResult);
         }
         catch(TransformerException e)

@@ -1,7 +1,5 @@
 package se.liu.ida.toblu302.tddd78.client.command;
 
-import se.liu.ida.toblu302.tddd78.client.command.Command;
-import se.liu.ida.toblu302.tddd78.client.command.CommandMaker;
 import se.liu.ida.toblu302.tddd78.library.IRCConnection;
 
 /**

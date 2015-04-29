@@ -28,7 +28,7 @@ public class ListedUser
     @Override
     public String toString()
     {
-        return (this.mode + this.userName);
+        return (this.userName);
     }
 
     @Override
