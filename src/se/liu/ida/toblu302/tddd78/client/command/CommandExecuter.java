@@ -26,8 +26,11 @@ public class CommandExecuter
 
         Command command = maker.getCommand(parts);
 
+        //the command is invalid
         if (command == null)
         {
+            System.out.println("You've entered an invalid command.\nHere is a list of valid commands:");
+            System.out.println(maker.getValidCommands());
             return;
         }
 

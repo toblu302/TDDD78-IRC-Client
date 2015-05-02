@@ -35,4 +35,16 @@ public class CommandMaker
 
         return null;
     }
+
+    public String getValidCommands()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        for (Command command : commands)
+        {
+            sb.append(command);
+        }
+
+        return sb.toString();
+    }
 }

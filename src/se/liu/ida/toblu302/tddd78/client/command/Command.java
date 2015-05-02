@@ -21,6 +21,12 @@ public class Command
         this.numberOfArguments = numberOfArguments;
     }
 
+    @Override
+    public String toString()
+    {
+        return "\t\"/" + cmd + " [" + numberOfArguments + " arguments]\"\n";
+    }
+
     public CommandType getType()
     {
         return type;
