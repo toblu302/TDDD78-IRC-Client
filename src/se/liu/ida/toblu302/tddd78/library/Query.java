@@ -1,7 +1,7 @@
 package se.liu.ida.toblu302.tddd78.library;
 
 /**
- * Created by zaito on 15/04/15.
+ * Represents a "qurey" window - a different user you can talk to.
  */
 public class Query extends AbstractTalkable
 {

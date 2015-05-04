@@ -36,6 +36,7 @@ public class IRCConnection
 
         this.connection = new Connection(server, port);
 
+        //first things to get sent to an IRC server upon connection: see the protocol for details.
         connection.write("NICK " + userName + "\r\n");
         connection.write("USER " + userName + " 0 * : " + realName + "\r\n");
 
@@ -173,7 +174,6 @@ public class IRCConnection
 
     public void quitConnection()
     {
-
         isLogging = false;
         loggingThread.interrupt();
         connection.write("QUIT");
@@ -186,7 +186,7 @@ public class IRCConnection
 
     private void handleMessage(String message)
     {
-        log.add(message);
+        log.add(message); //this is our own log, of everything the server has ever sent.
 
         Channel channel;
 
@@ -194,10 +194,16 @@ public class IRCConnection
         String channelName = Message.getChannelString(message);
         String userMessage = Message.getMessageString(message);
 
+        //for details on what's going on here, see the IRC protocol and the MessageType enum
         switch (Message.getMessageType(message))
         {
             case CHANNELMESSAGE:
                 channel = getChannelFromName(channelName);
+
+                //if we've got a new message from a channel, that channel should be in our list
+                //and thus be attainable through getChannelFromName
+                assert channel != null;
+
                 channel.addLog(user, userMessage);
                 notifyListeners(new IRCEvent(IRCEventType.NEWMESSAGE));
                 break;
@@ -212,11 +218,15 @@ public class IRCConnection
 
             case TOPIC:
                 channel = getChannelFromName(channelName);
-                channel.setTopic(userMessage);
-                notifyListeners(new IRCEvent(IRCEventType.NEWTOPIC));
+                if(channel != null)
+                {
+                    channel.setTopic(userMessage);
+                    notifyListeners(new IRCEvent(IRCEventType.NEWTOPIC));
+                }
                 break;
 
             case PART:
+                //if a user has PARTed, it leaves just one channel
                 channel = getChannelFromName(channelName);
                 if(channel != null)
                 {
@@ -226,6 +236,8 @@ public class IRCConnection
                 break;
 
             case QUIT:
+                //if a user has QUIT, it should be removed from ALL the channels we're in
+                //there can't be two users with the same name on IRC so no additional check is needed
                 for (Channel chan : channels)
                 {
                     chan.removeUser(user);
@@ -238,6 +250,8 @@ public class IRCConnection
                 break;
 
             case PING:
+                //if we get pinged by a server, we have to reply to the same server
+                //for some reason, the servername is the "message" in a PING message.
                 connection.write("PONG " + userMessage + "\r\n");
                 break;
 
@@ -272,6 +286,7 @@ public class IRCConnection
     {
         if (user.equals(this.userName))
         {
+            //if our nick change was accepted, it's going to be sent to us as a regular NICK
             this.userName = userMessage;
         }
 

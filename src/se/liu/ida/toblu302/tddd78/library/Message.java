@@ -51,6 +51,8 @@ public final class Message
 
         int start = msg.indexOf('#');
         int end = msg.indexOf(' ', start);
+
+        //if there is no ' ' after start and before the end-of-line, end will equal -1 (and thus be smaller than start)
         if (end < start)
         {
             end = msg.length();
@@ -60,7 +62,8 @@ public final class Message
 
     public static String getMessageString(String msg)
     {
-        //the "message" of a string is from the second : and forward (the first ":" is the very first character)
+        //the "message" of a string is from the second : and forward,
+        // and the first ":" is the very first character
         int secondColon = msg.indexOf(':', 1);
         if (secondColon == -1)
         {
@@ -74,7 +77,7 @@ public final class Message
         int returnNumber = -1;
 
         String[] parts = msg.split(" ");
-        if (parts.length > 1 && parts[1].length() == 3)
+        if (parts.length > 1 && isNumeric(parts[1]))
         {
             returnNumber = Integer.parseInt(parts[1]);
         }
@@ -127,17 +130,26 @@ public final class Message
         else
         {
             String[] parts = message.split(" ");
-            if (parts.length > 1 && parts[1].length() == 3)
+            if (parts.length > 1 && isNumeric(parts[1]))
             {
-                if (Character.isDigit(parts[1].charAt(0))
-                        && Character.isDigit(parts[1].charAt(1))
-                        && Character.isDigit(parts[1].charAt(2)))
-                {
-                    return MessageType.NUMERIC;
-                }
+                return MessageType.NUMERIC;
             }
         }
 
         return MessageType.OTHER;
+    }
+
+    private static boolean isNumeric(String str)
+    {
+        if (str.length() == 3)
+        {
+            if (Character.isDigit(str.charAt(0))
+                    && Character.isDigit(str.charAt(1))
+                    && Character.isDigit(str.charAt(2)))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

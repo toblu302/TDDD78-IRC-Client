@@ -22,6 +22,7 @@ public class CommandExecuter
             return;
         }
 
+        //the first character is the "/" (see if-statement above), so it's ignored here
         String[] parts = commandString.substring(1).split(" ");
 
         Command command = maker.getCommand(parts);
@@ -42,19 +43,19 @@ public class CommandExecuter
                 break;
 
             case NICK:
-                irc.changeNick(parts[1]);
+                irc.changeNick( parts[1] );
                 break;
 
             case JOIN:
-                irc.joinChannel(parts[1]);
+                irc.joinChannel( parts[1] );
                 break;
 
             case MSG:
-                irc.joinQuery(parts[1]);
+                irc.joinQuery( parts[1] );
                 break;
 
             case PART:
-                irc.leaveChannel(parts[1]);
+                irc.leaveChannel( parts[1] );
                 break;
 
             default:

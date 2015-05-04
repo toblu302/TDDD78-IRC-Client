@@ -9,6 +9,8 @@ import java.awt.*;
 /**
  * A component which lets you select a channel in a tree.
  * Is a JTree inside of a JPanel. Uses GridBagLayout for scalability.
+ *
+ * This technically lets you select Queries as well, since they'll appear in the same list.
  */
 public class ChannelSelectComponent extends JPanel
 {
@@ -33,13 +35,12 @@ public class ChannelSelectComponent extends JPanel
         channelSelector.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         channelSelector.addTreeSelectionListener(selectionListener);
 
-
         this.add(channelSelector, gridConstraints);
     }
 
     public DefaultMutableTreeNode selectedNode()
     {
-        return (DefaultMutableTreeNode) channelSelector.getLastSelectedPathComponent();
+        return (DefaultMutableTreeNode)channelSelector.getLastSelectedPathComponent();
     }
 
     private boolean channelExists(String channel)
@@ -89,6 +90,8 @@ public class ChannelSelectComponent extends JPanel
         model.reload(root);
     }
 
+    //I don't use this method yet,
+    // but it could be useful if I were to add a functionality which leaves all the channels.
     public void removeAllChannels()
     {
         DefaultTreeModel model = (DefaultTreeModel) channelSelector.getModel();

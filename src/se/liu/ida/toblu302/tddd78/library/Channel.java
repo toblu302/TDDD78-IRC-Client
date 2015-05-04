@@ -35,6 +35,7 @@ public class Channel extends AbstractTalkable
 
     public void changeUserName(String oldName, String newName)
     {
+        //iterate over all the users, update the first spotted matching name
         for (ListedUser user : currentUsers)
         {
             if (oldName.equals(user.getUserName()))

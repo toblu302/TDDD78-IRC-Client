@@ -41,16 +41,9 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private final static double USER_LIST_WEIGHT = 0.2;
     private final static double CHATLOG_WEIGHT = 0.8;
 
-    private String username;
-    private String realName;
-    private final static int DEFAULTPORT = 6667;
-
     public IRCFrame(String server, int port, String username, String realName) throws HeadlessException, UnknownHostException
     {
         super("IRC!");
-
-        this.username = username;
-        this.realName = realName;
 
         this.setJMenuBar(this.getIRCMenuBar());
         textInput.addListener(this);
@@ -61,7 +54,6 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         channelSelect.setPreferredSize(new Dimension((int) (WIDTH * CHANNEL_LIST_WEIGHT), HEIGHT));
         gridConstraints.fill = GridBagConstraints.BOTH;
         gridConstraints.gridx = 0;
-        gridConstraints.gridy = 0;
         gridConstraints.weightx = CHANNEL_LIST_WEIGHT;
         gridConstraints.weighty = 5;
         gridConstraints.gridwidth = 1;
@@ -70,7 +62,6 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         chatLog.setPreferredSize(new Dimension((int) (WIDTH * CHATLOG_WEIGHT), HEIGHT));
         gridConstraints.fill = GridBagConstraints.BOTH;
         gridConstraints.gridx = 1;
-        gridConstraints.gridy = 0;
         gridConstraints.weightx = CHATLOG_WEIGHT;
         gridConstraints.weighty = 5;
         gridConstraints.gridwidth = 1;
@@ -79,7 +70,6 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         connectedUsers.setPreferredSize(new Dimension((int) (WIDTH * USER_LIST_WEIGHT), HEIGHT));
         gridConstraints.fill = GridBagConstraints.BOTH;
         gridConstraints.gridx = 2;
-        gridConstraints.gridy = 0;
         gridConstraints.weightx = USER_LIST_WEIGHT;
         gridConstraints.weighty = 5;
         gridConstraints.gridwidth = 1;
@@ -130,7 +120,6 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
         file.add(quit);
         file.add(newChannel);
 
-
         final JMenuBar menubar = new JMenuBar();
         menubar.add(file);
 
@@ -141,6 +130,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
 
     private void quit()
     {
+        //ask the user if they want to quit: exit the program if they do
         int optionChosen = JOptionPane.showOptionDialog(null, "Do you want to quit?",
                 "Quit?", JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
@@ -170,17 +160,22 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
             case NEWUSER:
             case CHANGEDNAME:
             case CHANGEDCHANNEL:
+                //for all these cases:
+                //remove all users from the list and re-add them
                 connectedUsers.removeAllUsers();
                 if (irc.getChannelUsers() != null)
                 {
                     connectedUsers.addMultipleUsers(irc.getChannelUsers());
                 }
+
+                //update the chatlog and the topic
                 updateChatLog();
-                this.setTitle(irc.getChannelTopic());
+                this.setTitle( irc.getChannelTopic() );
                 break;
 
             case NEWMESSAGE:
             case NEWQUERYMESSAGE:
+                //update the chatlog, regardless if we're in the channel or not
                 updateChatLog();
                 break;
 
@@ -210,6 +205,7 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     {
         if (str.startsWith("/"))
         {
+            //let our CommandExecuter deal with the commands
             commandHandler.executeCommand(str);
         }
         else
@@ -227,14 +223,18 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     {
         if (channelSelect.isRootSelected())
         {
+            //if we select the "root" of the tree, we want to select some corresponding "Talkable".
+            //let the IRCConnection decide what "root" means
             irc.selectRoot();
         }
-
-        DefaultMutableTreeNode channel = channelSelect.selectedNode();
-
-        if (channel != null)
+        else //otherwise, try to convert the node we selected to a Talkable
         {
-            irc.selectTalkable(channel.toString());
+            DefaultMutableTreeNode channelNode = channelSelect.selectedNode();
+
+            if (channelNode != null)
+            {
+                irc.selectTalkable(channelNode.toString());
+            }
         }
     }
 

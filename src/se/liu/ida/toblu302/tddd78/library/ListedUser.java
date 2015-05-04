@@ -7,7 +7,7 @@ package se.liu.ida.toblu302.tddd78.library;
 public class ListedUser
 {
     private String userName;
-    private char mode;
+    private char mode; //different usermodes hasn't been fully implemented yet
 
     public ListedUser(final String userName, final char mode)
     {

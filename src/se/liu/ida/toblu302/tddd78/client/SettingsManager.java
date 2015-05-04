@@ -15,7 +15,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
 /**
- * Manages (stores/loads) settings.
+ * Singleton which manages (stores/loads) settings.
  */
 public final class SettingsManager
 {
@@ -42,7 +42,13 @@ public final class SettingsManager
             this.settingsDocument.getDocumentElement().normalize();
             Element docEle = this.settingsDocument.getDocumentElement();
             NodeList ircList = docEle.getElementsByTagName("IRC");
-            this.settingsNode = (Element)ircList.item(0);
+            assert ircList.getLength() != 0;
+            this.settingsNode = (Element) ircList.item(0);
+        }
+        catch(FileNotFoundException e)
+        {
+            e.printStackTrace();
+            System.out.println("Couldn't load the settings-file. Has it been removed?");
         }
         catch(ParserConfigurationException | SAXException | IOException e )
         {
@@ -52,26 +58,29 @@ public final class SettingsManager
 
     private String getSettingByName(String setting)
     {
+        //get the first node with the given tag (setting), return its text content, if it exists
         NodeList settingList = settingsNode.getElementsByTagName(setting);
         if(settingList.getLength() == 0)
         {
             return null;
         }
 
-        Node firstSettingElement = (Element) settingList.item(0);
+        Node firstSettingElement = settingList.item(0);
         return firstSettingElement.getTextContent().trim();
     }
 
     private void saveSettingByName(String setting, String newValue)
     {
+        //get the first node with the given tag (setting), add the new value as its text content
         NodeList settingList = settingsNode.getElementsByTagName(setting);
         if(settingList.getLength() == 0)
         {
             return;
         }
-        Node firstSettingElement = (Element) settingList.item(0);
+        Node firstSettingElement = settingList.item(0);
         firstSettingElement.setTextContent(newValue);
 
+        //configure DOM and try to save it to the file
         try
         {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();

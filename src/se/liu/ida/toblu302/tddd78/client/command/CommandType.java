@@ -8,7 +8,7 @@ package se.liu.ida.toblu302.tddd78.client.command;
 public enum CommandType
 {
     /**
-     * Exit the connection.
+     * Quit the program.
      */
     QUIT,
 
