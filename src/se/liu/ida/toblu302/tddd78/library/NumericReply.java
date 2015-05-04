@@ -7,6 +7,10 @@ package se.liu.ida.toblu302.tddd78.library;
  * <p>
  * (Not all of them are implemented here)
  */
+
+//The numbers here gets reported by IDEA as Magic numbers, but since its very clear what they're for
+// (just check the big green text next to them), it's not really an issue.
+// The numbers and names are taken directly from the IRC protocol
 public enum NumericReply
 {
     /**

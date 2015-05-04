@@ -3,6 +3,9 @@ package se.liu.ida.toblu302.tddd78.library;
 /**
  * Represents something (channel, user) which can be talked to on IRC.
  */
+
+// One shouldn't use this class directly but rather the classes which inherits from it,
+// which is why it's abstract despite not having any abstact methods.
 public abstract class AbstractTalkable implements Talkable
 {
     protected String name;

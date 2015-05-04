@@ -30,7 +30,8 @@ public class IRCFrame extends JFrame implements IRCListener, InputListener, Tree
     private ChannelSelectComponent channelSelect = new ChannelSelectComponent(this);
     private ChatLogComponent chatLog = new ChatLogComponent();
     private ConnectedUsersComponent connectedUsers = new ConnectedUsersComponent();
-    private InputComponent textInput = new InputComponent();
+    private InputComponent textInput = new InputComponent(); //might be useful from other contexts as well, which is why
+                                                             // it isn't local
 
     private final static int WIDTH = 720;
     private final static int HEIGHT = 640;

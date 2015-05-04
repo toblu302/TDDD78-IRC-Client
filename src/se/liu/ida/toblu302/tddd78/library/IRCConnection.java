@@ -163,6 +163,10 @@ public class IRCConnection
         {
             return null;
         }
+
+        // If the currently selected talkable exists in channel,
+        // we can safely convert it to a Channel-object and use its getCurrentUsers()-method.
+        // "selectedTalkable" can exist in "queries" as well as "channels", this code check which it is in.
         if( channels.contains(selectedTalkable) )
         {
             Channel channel = (Channel)selectedTalkable;
@@ -325,7 +329,6 @@ public class IRCConnection
     {
         Channel channel;
 
-        String user = Message.getUserString(message);
         String channelName = Message.getChannelString(message);
         String userMessage = Message.getMessageString(message);
 

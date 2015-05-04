@@ -139,13 +139,13 @@ public final class Message
         return MessageType.OTHER;
     }
 
-    private static boolean isNumeric(String str)
+    private static boolean isNumeric(CharSequence seq)
     {
-        if (str.length() == 3)
+        if (seq.length() == 3)
         {
-            if (Character.isDigit(str.charAt(0))
-                    && Character.isDigit(str.charAt(1))
-                    && Character.isDigit(str.charAt(2)))
+            if (Character.isDigit(seq.charAt(0))
+                    && Character.isDigit(seq.charAt(1))
+                    && Character.isDigit(seq.charAt(2)))
             {
                 return true;
             }
